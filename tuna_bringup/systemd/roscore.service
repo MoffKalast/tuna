@@ -1,0 +1,8 @@
+[Unit]
+After=NetworkManager.service time-sync.target
+[Service]
+Type=forking
+User=ubuntu
+ExecStart=/usr/sbin/roscore
+[Install]
+WantedBy=multi-user.target

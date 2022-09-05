@@ -1,0 +1,7 @@
+<launch>
+
+	<node name="dir_show" pkg="tuna_viz" type="dir_show.py" output="screen"/>
+
+	<node name="gps_transformer" pkg="tuna_nav" type="gps_transformer.py" output="screen"/>
+
+</launch>

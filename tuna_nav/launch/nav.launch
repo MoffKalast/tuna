@@ -1,0 +1,27 @@
+<launch>
+
+	<rosparam param="datum">[43.3783645, 16.6021343333, 0.0, map, base_link]</rosparam>
+
+	<node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" output="screen">
+
+		<param name="wait_for_datum" value="true"/>
+		<param name="publish_filtered_gps" value="true"/>
+
+		<param name="magnetic_declination_radians" value="0.0775"/>
+		<param name="zero_altitude" value="true"/>
+		<param name="use_odometry_yaw" value="false"/>
+
+		<remap from="/gps/fix" to="/fix" />
+		<remap from="gps/filtered" to="/fix/filtered" />
+		<remap from="/odometry/filtered" to="/odometry/propeller" />
+	</node>
+
+	<node name="odom_publisher" pkg="tuna_description" type="odom_publisher.py" output="screen"/>
+
+	<!--<node name="gps_transformer" pkg="tuna_nav" type="gps_transformer.py" output="screen"/>-->
+
+	<include file="$(find tuna_nav)/launch/move_basic.launch"/>
+
+	<node pkg="tuna_nav" type="goal_publisher.py" name="goal_publisher" output="screen"/>
+
+</launch>

@@ -1,0 +1,8 @@
+<launch>
+
+	<param name="robot_description" textfile="$(find tuna_description)/urdf/boat.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+	
+	<node name="odom_publisher" pkg="tuna_description" type="sim_publisher.py" />-->
+
+</launch>

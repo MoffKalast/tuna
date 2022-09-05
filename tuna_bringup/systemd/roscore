@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source /opt/ros/noetic/setup.sh
+source /etc/ubiquity/env.sh
+
+while ! ping -c 1 -n -w 1 "$ROS_IP" &> /dev/null
+do
+	sleep 1
+done
+
+roscore -v &
+
+while ! echo exit | nc localhost 11311 > /dev/null
+do
+	sleep 1
+done
