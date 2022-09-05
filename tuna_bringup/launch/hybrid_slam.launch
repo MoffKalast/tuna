@@ -1,0 +1,15 @@
+<launch>
+
+    <node name="odom_publisher" pkg="tuna_description" type="odom_publisher.py" output="screen"/>
+
+    <include file="$(find tuna_bringup)/launch/move_basic.launch"/>
+
+    <node name="iris_lama_ros" pkg="iris_lama_ros" type="hybrid_pf_slam2d_ros" output="screen">
+    <rosparam command="load" file="$(find tuna_bringup)/param/hyb_slam2d.yaml"/>
+        <remap from="/odom" to="odom"/>
+        <remap from="/landmark_map" to="landmark_map"/>
+        <remap from="/landmarks" to="landmarks"/>
+        <remap from="/initialpose" to="initialpose"/>
+    </node>
+
+</launch>

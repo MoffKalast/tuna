@@ -1,0 +1,252 @@
+# LaMa - A Localization and Mapping library.
+#
+# Hybrid Particle Filter SLAM
+# Gridd + Landmarks
+#
+
+# The global frame
+global_frame_id: "map"
+# The odometry frame
+odom_frame_id: "odom"
+# The frame of the robot
+base_frame_id: "base_link"
+
+# Topics
+detection_topic: "fiducial_transforms"
+scan_topic: "scan_filtered"
+gnss_topic: "gnss/fix"
+
+# How many seconds ahead of time is the pose transformation published.
+transform_tolerance: 0.1
+
+# Time period (in seconds) between each time the map is published.
+map_publish_period: 5
+
+# You can define an initial pose
+# x-coordinate (meter)
+initial_pos_x: 0.0
+# y-coordinate (meter)
+initial_pos_y: 0.0
+# angular orientation (radians)
+initial_pos_a: 0.0
+
+# The user can trigger a map reset, which will delete the current map and start
+# anew.  However, the current pose of the robot will remain unchanged, unless
+# you set this parameter to `true.  If that is the case, the pose of the robot
+# will bet set to the initial pose.
+reset_initial_pose: false
+
+# Number of particles
+#
+# Increasing the number of particles increases the changes of having a better
+# map. But as the number of particles grow, so does the computational
+# requirements.
+#
+# However, the number of particles in our particle filter is not fixed.
+# Depending on how spread the particles are, then number can increase or
+# decrease. Therefore, you can set a minimum and a maximum number of particles.
+#
+
+# minumum number of particles
+particles: 150
+# maximum number of particles
+max_particles: 400
+
+# use gnss injection, useful when using a low number of particle
+gnss_injection: true
+# how likely a gnss particle will be injected (0.01 is 1%)
+gnss_injection_prob: 0.01
+
+# keep a history of the particle poses.
+# if set to true, a path will be available at the topic `/path`
+keep_pose_history: false
+
+# Likelihood gain
+#
+# The gain reduces or increases the difference between the weight of each
+# particle.  Becase the number of detected landmarks is usually low, we use the
+# gain to amplify the difference between particles.
+lgain: 2.0
+
+# Do a compatibility test between the measurement and the associated landmarks.
+#
+# An incompatible measurement will not be updated but its weight will be added
+# to the particle weight. The objective is to penalize particles far from the
+# true location.
+ctest: true
+
+# A measurement must have a score greater than this value, otherwise it is discarded.
+# This prevents bad detections from being integrated.
+min_score: 0.5
+
+# Sampling variance factors: srr, stt, srt, str
+#
+# These factors are use to calculate the error variances from the robot motion.
+# The translation and rotation variances are proportional to the magnitude of
+# the relative translation and relative rotation between updates.
+#
+# For robotic systems with bad odometry, high values should be used.
+#
+# How much the rotation affects the rotation
+srr: 0.01
+# How much the translation affects the translation
+stt: 0.9
+# How much the rotation affect the tranlation
+srt: 0.9
+# How much the translation affects the rotation
+str: 0.01
+
+# Landmark sigma scaling factor: srr, sst, ssa
+#
+# These factor are use to calculate the landmark detection covaraince.  The
+# covariance is calculated in sherical coordinates (physics version) and then
+# converted to Cartesian, hence, these sigma scales appy to the spherical
+# components of the detection. The variances are proportional to the value of
+# each component.
+#
+# Factor fo rho (or range)
+ssr: 0.1
+# Factor for theta
+sst: 0.2
+# Factor for azimute
+ssa: 0.2
+
+# Number of working threads
+#
+# The mapping processes are independent for each particle. We take advantage of
+# this property to parallelize their execution. Note that doubling the number
+# of threads may not correspond to 2x speedup, weight normalization and
+# sampling are executed sequentially.
+threads: 4
+
+# displacement threshold: The SLAM process will only update new measurements if
+# the robot has moved at least this many meters.
+#
+# It is recommended to use a small number here, specially if your odometry is
+# not to be trusted. Odometry error is cumulative, hence the more displacement
+# you accumulate, the higher is the error that has to be corrected.
+#
+# Remember that a smaller number also implies a higher number of updates,
+# therefore, you have to take into consideration how long it takes to execute a
+# single update step. Our slam solution is fast, and usually a small value if
+# recommended.
+d_thresh: 0.1
+
+# angular threshold: The SLAM process will only update new measurement if
+# the robot has turned at least this many radians.
+#
+# Read the recommendations in `d_thresh`, they apply to this parameter.
+a_thresh: 0.1
+
+# Optimization strategy used by the scan matching process.
+# The supported stategies are:
+#   * gn    Gauss-Newton method, simple and fast: assumes monotonic cost decrease
+#   * lm    Levenberg-Marquardt method, more elaborated: may require more iterations.
+#
+# Using `gn` is a good choice.
+strategy: "gn"
+
+# Maximum number of iterations the optimization algorithm is allowed to
+# execute.
+max_iterations: 100
+
+# Maximum L2 (i.e. Euclidean) distance, in meters, calculated by the distance
+# map used for scan matching.
+#
+# Each time the occupancy map is updated, a distance map is also updated that
+# contains the distance of a cell to the closest occupied cell. This is done
+# efficiently by a dynamic distance map that tracks the changes in the
+# occupancy map and updates accordingly. Nonetheless, this can be an expensive
+# tasks if the number of changes in the occupancy grid is high and the maximum
+# L2 distance is also high. A high number of changes usually happen when
+# unknown parts of the map become known, and in SLAM this happens frequently.
+#
+# A low value makes the update step go faster, but if the value is to low the
+# scan matching may loose "attraction" to the "walls". A value of 0.5 meters
+# was found to provide good results.
+l2_max: 0.5
+
+# Maximum range (in meters) that a laser beam/ray can have for it to be
+# accepted. Any beam with a value equal or higher than this will be discarded.
+#
+# Note that the lower the range of a beam the faster the update with said beam.
+mrange: 80
+
+# Number of beams/rays to skip in each scan
+#
+# Useful for when you want to reduce the number of beams used in the SLAM
+# process. Increasing this value will result in a faster update without
+# necessarily losing accuracy.
+beam_step: 5
+
+# Size (in meters) of a truncated range. A value equal to zero means no
+# truncation.
+#
+# Instead of discarding beams with a high range value you can truncate it to
+# this value. A truncated range will not not mark any cell as occupied but it
+# will mark free cells along its truncated range.
+truncate_range: 0.0
+
+# Truncation value in meters. A value equal to zero means no truncation.
+#
+# Similar to `truncate_range`, but instead of truncating the beam before it
+# reaches the endpoint, it reverses the direction and truncates the beam before
+# reaching the origin. In practice, it will have a new origin point that
+# respects this truncate value.
+truncate: 0.0
+
+# Resolution (in meters) of the occupancy and distance grid maps.
+#
+# A higher resolution may increase the SLAM accuracy. But you should not use a
+# resolution that is higher that your laser' resolution.
+#
+# Remember that a higher resolution increases the overall computational
+# requirements.  More resolution means more cells to update.
+resolution: 0.05
+
+# The size of a squared patch in number of cells per edge.
+#
+# The grid maps used by the SLAM process grow dynamically in size. Cells are
+# allocated in memory only when needed. For efficiency reasons, cells are not
+# allocated individually but in patches (or chunks). This value defines how
+# many many cells are allocated per patch. For example, for a value of 32,
+# enough memory is allocated to hold 32*32 cells.
+#
+# A low value results in a lower amount of allocated memory, but may result in
+# additional memory allocation overhead if the mapping area is large.  For a
+# high number you have the reverse effect, low memory allocation overhead but
+# higher amount of allocated memory.
+#
+# For more information see:
+# Pedrosa et al. 2018. “A Sparse-Dense Approach for Efficient Grid Mapping.”
+patch_size: 32
+
+# Use lossless data compression to reduce the data hold by a patch.
+#
+# All patches will have their data compressed, except the most recently used
+# patched.  The most recently used patched are kept uncompressed in a cache
+# with an LRU cache eviction strategy.
+#
+# Compression and decompression (obviously) introduce a computational overhead
+# to the SLAM process. However, the employed lossless algorithms are fast which
+# in conjuction with the cache mechanism makes this online data compression a
+# viable feature.
+use_compression: false
+
+# The size of the cache as in the number of patches it holds.
+#
+# If you set this value to low, you will notice a severe impact in the time it
+# takes to compute an update. Also, this value may need to change if you change the
+# `patch_size`.
+cache_size: 100
+
+# Lossless data compression algorithm used to compressed patches data.
+#
+# The supported algorithms are:
+#   * lz4      faster compression/decompression, ratio ~ 1.75
+#   * zstd     fast   compression/decompression, ratio ~ 2.5
+#
+# Usually, zstd is a good choice, it has a higher compression ratio with
+# reasonable speeds.
+compression_algorithm: "zstd"
+

@@ -26,16 +26,16 @@ class IMUFilter:
 		self.mag_angle = 0
 		self.rotation = (0.0, 0.0, 0.0, 1.0)
 
-		self.imu_sub = rospy.Subscriber("/imu/data_raw", Imu, self.imu_data)
-		self.mag_sub = rospy.Subscriber("/imu/mag", MagneticField, self.mag_data)
-
 		self.imu_pub = rospy.Publisher("/imu/data", Imu, queue_size=50)
 		self.id_pub = rospy.Publisher("/imu/identity", Imu, queue_size=50)
+
+		self.imu_sub = rospy.Subscriber("/imu/data_raw", Imu, self.imu_data)
+		self.mag_sub = rospy.Subscriber("/imu/mag", MagneticField, self.mag_data)
 
 	def mag_data(self, msg):
 
 		m = msg.magnetic_field
-		self.mag_angle = math.atan2(m.x, m.z) + math.pi/2;
+		self.mag_angle = math.atan2(m.x, m.z);
 
 
 	def imu_data(self, msg):

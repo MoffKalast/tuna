@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<launch>
+  
+  <arg name="max_linear_velocity" default="0.45"/>
+  <arg name="max_turning_velocity" default="0.45"/>
+  
+  <!-- ================================================================================================================== -->
+
+  <node name="move_basic" pkg="move_basic" type="move_basic"  output="screen">    
+    <param name="base_frame" value="base_link"/>
+    <param name="min_turning_velocity" value="0.35"/>
+    <param name="max_turning_velocity" value="$(arg max_turning_velocity)"/>
+    <param name="max_lateral_velocity" value="0.5"/>
+    <param name="max_linear_velocity" value="$(arg max_linear_velocity)"/>
+    <param name="min_linear_velocity" value="0.35"/>
+    <param name="linear_acceleration" value="0.1"/>
+    <param name="turning_acceleration" value="0.1"/>
+    
+    <param name="angular_tolerance" value="0.3"/>
+    <param name="linear_tolerance" value="2.0"/> 
+    
+    <param name="lateral_kp" value="0.45"/>
+    <param name="lateral_kd" value="0.56"/>
+    <param name="lateral_ki" value="0.001"/>
+    
+    <param name="localization_latency" value="0.5"/>
+    
+    <param name="runaway_timeout" value="3.0"/>
+
+    <param name="obstacle_wait_threshold" value="60.0"/>
+
+    <param name="forward_obstacle_threshold" value="2.0"/>
+    <param name="robot_back_length" value="0.25"/>
+    <param name="min_side_dist" value="0.2"/>
+    <param name="robot_width" value="0.1"/>
+    <param name="robot_front_length" value="0.25"/>
+
+    <param name="rotational_gain" value="3.5"/> <!-- relic from the past, should be removed with new move_basic-->  
+    <param name="abort_timeout" value="0.5"/>  <!-- relic from the past, should be removed with new move_basic-->  
+    <param name="linear_gain" value="0.5"/> <!-- relic from the past, should be removed with new move_basic-->
+    <param name="reverse_without_turning_threshold" value="0.1"/> <!-- relic from the past, should be removed with new move_basic-->
+    <param name="velocity_threshold" value="0.2"/> <!-- relic from the past, should be removed with new move_basic-->
+
+    <remap from="/move_base/goal" to="move_base/goal"/>
+    <remap from="/move_base_simple/goal" to="move_base_simple/goal"/>
+    <remap from="/plan" to="plan"/>
+    <remap from="/obstacle_viz" to="obstacle_viz"/>
+    <remap from="/cmd_vel" to="cmd_vel"/>
+    <remap from="/lateral_error" to="lateral_error"/>
+    <remap from="/obstacle_distance" to="obstacle_distance"/>
+    <remap from="/plan" to="plan"/>
+    
+  </node>
+</launch>

@@ -1,0 +1,18 @@
+<launch>
+
+    <!-- Misc processing for the frontend view. -->
+    <node name="map_tf_worker" pkg="ezpkg_map_screen" type="map_tf_worker.py"/>
+
+    <!-- Executes actions defined by global triggers and goals. -->
+    <node name="actions_worker" pkg="ezpkg_map_screen" type="actions.py"/>
+
+    <!-- Executes trigger actions depending on set requirements.    -->
+    <node name="global_triggers_worker" pkg="ezpkg_map_screen" type="global_triggers.py"/>
+
+    <!-- Enable web app interaction with the route manager. -->
+    <node name="map_route_worker" pkg="ezpkg_map_screen" type="map_route_worker.py" output="screen"/>
+    
+    <!-- Issue driving along given routes with move_basic. NOTE: requires a running move_basic instance.    -->
+    <node name="route_manager_node" pkg="ezpkg_map_screen" type="route_manager_node.py"/>
+
+</launch>
