@@ -219,7 +219,7 @@ class State:
 		#self.rotation = euler_to_quaternion(0, 0, self.angle)
 
 		self.odom_tf.sendTransform((self.x, self.y, 0), self.rotation, current_time, "base_link", "odom")
-		self.odom_tf.sendTransform((self.gx, self.gy, 0), (0,0,0,1), current_time, "odom", "map")
+		#self.odom_tf.sendTransform((self.gx, self.gy, 0), (0,0,0,1), current_time, "odom", "map")
 
 		odom = Odometry()
 		odom.header.stamp = current_time

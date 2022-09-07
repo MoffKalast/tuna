@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 	}
 
 	write(fd, "1", 1);
-	usleep(12000);
+	usleep(15000);
 	write(fd, "0", 1);
 
 	ros::Rate loop_rate(0.8);
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 			ROS_INFO("1");
 
 			write(fd, "1", 1);
-			usleep(12000);
+			usleep(15000);
 			write(fd, "0", 1);
 
 			ROS_INFO("0");	

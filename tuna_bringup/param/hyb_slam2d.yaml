@@ -34,7 +34,7 @@ initial_pos_a: 0.0
 # anew.  However, the current pose of the robot will remain unchanged, unless
 # you set this parameter to `true.  If that is the case, the pose of the robot
 # will bet set to the initial pose.
-reset_initial_pose: false
+reset_initial_pose: true
 
 # Number of particles
 #
@@ -48,14 +48,14 @@ reset_initial_pose: false
 #
 
 # minumum number of particles
-particles: 150
+particles: 10
 # maximum number of particles
-max_particles: 400
+max_particles: 15
 
 # use gnss injection, useful when using a low number of particle
 gnss_injection: true
 # how likely a gnss particle will be injected (0.01 is 1%)
-gnss_injection_prob: 0.01
+gnss_injection_prob: 0.99
 
 # keep a history of the particle poses.
 # if set to true, a path will be available at the topic `/path`
@@ -88,13 +88,13 @@ min_score: 0.5
 # For robotic systems with bad odometry, high values should be used.
 #
 # How much the rotation affects the rotation
-srr: 0.01
+srr: 0.6
 # How much the translation affects the translation
-stt: 0.9
+stt: 0.6
 # How much the rotation affect the tranlation
-srt: 0.9
+srt: 0.6
 # How much the translation affects the rotation
-str: 0.01
+str: 0.6
 
 # Landmark sigma scaling factor: srr, sst, ssa
 #
@@ -148,7 +148,7 @@ strategy: "gn"
 
 # Maximum number of iterations the optimization algorithm is allowed to
 # execute.
-max_iterations: 100
+max_iterations: 10
 
 # Maximum L2 (i.e. Euclidean) distance, in meters, calculated by the distance
 # map used for scan matching.
@@ -248,5 +248,5 @@ cache_size: 100
 #
 # Usually, zstd is a good choice, it has a higher compression ratio with
 # reasonable speeds.
-compression_algorithm: "zstd"
+compression_algorithm: "lz4"
 

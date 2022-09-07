@@ -23,8 +23,17 @@ if [[ ! -d $log_path ]]; then
   fi
 fi
 
-#stty -F /dev/ttyAMA0 raw
-stty -F /dev/ttyAMA1 raw
+# GNSS SETUP
+stty -F /dev/ttyAMA0 9600 raw
+
+#Set RATE to 5Hz
+echo -e -n '\xB5\x62\x06\x08\x06\x00\xC8\x00\x01\x00\x01\x00\xDE\x6A\xB5\x62\x06\x08\x00\x00\x0E\x30' >> /dev/ttyAMA0
+
+#Set BAUD to 57600
+echo -e -n '\xB5\x62\x06\x00\x14\x00\x01\x00\x00\x00\xC0\x08\x00\x00\x00\xE1\x00\x00\x07\x00\x03\x00\x00\x00\x00\x00\xCE\xC9\xB5\x62\x06\x00\x00\x00\x06\x18' >> /dev/ttyAMA0
+
+stty -F /dev/ttyAMA0 57600 raw
+
 
 # disable hdmi
 sudo /opt/vc/bin/tvservice -o

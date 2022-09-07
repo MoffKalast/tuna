@@ -3,7 +3,7 @@
   <!-- A simple launch file for the nmea_serial_driver node. -->
 
   <arg name="port" default="/dev/ttyAMA0" />
-  <arg name="baud" default="9600" />
+  <arg name="baud" default="57600" />
   <arg name="frame_id" default="gps" />
   <arg name="use_GNSS_time" default="True" />
   <arg name="time_ref_source" default="gps" />
