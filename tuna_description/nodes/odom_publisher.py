@@ -74,38 +74,15 @@ class State:
 	def __init__(self):
 		rospy.init_node('odometry_publisher')
 
-		#self.get_tf = tf.TransformListener()
 		self.odom_tf = tf.TransformBroadcaster()
 
 		self.tf_buffer = tf2_ros.Buffer()
 		self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
-		self.button_init = rospy.Subscriber("/goalpub/init", Bool, self.init)
-
 		self.motor_sub = rospy.Subscriber("/cmd_vel", Twist, self.motor_data)
 		self.imu_sub = rospy.Subscriber("/imu/data", Imu, self.imu_data)
 
-		#self.fix_pub = rospy.Subscriber("/fix/tf", Point, self.gps_data)
-
-		self.odom_sub = rospy.Subscriber("/odometry/gps", Odometry, self.gps_data)
 		self.odom_pub = rospy.Publisher("/odometry/propeller", Odometry, queue_size=5)
-		#self.null_pub = rospy.Publisher("/odometry/null", Odometry, queue_size=50)
-
-		self.anglex = 0
-		self.angley = 0
-		self.anglez = 0
-
-		self.gx = 0
-		self.gy = 0
-
-		self.px_raw = 0
-		self.py_raw = 0
-
-		self.gx_raw = 0
-		self.gy_raw = 0
-
-		self.offsetx = 0
-		self.offsety = 0
 
 		self.x = 0
 		self.y = 0
@@ -118,55 +95,9 @@ class State:
 		self.CMD_angular_speed = 0
 
 		self.rotation = (0.0, 0.0, 0.0, 1.0)
-
-		self.magmin = Vector3()
-		self.magmin.x = 9999.9
-		self.magmin.y = 9999.9
-		self.magmin.z = 9999.9
-
-		self.magmax = Vector3()
-		self.magmax.x = -9999.9
-		self.magmax.y = -9999.9
-		self.magmax.z = -9999.9
-
 		self.imu_angle = 0
 
-	def init(self, msg):
-
-		if not msg.data:
-			return
-
-		self.offsetx = self.px_raw
-		self.offsety = self.py_raw
-
-		self.x = 0
-		self.y = 0
-		self.gx = 0
-		self.gy = 0
-		self.gx_raw = 0
-		self.gy_raw = 0
-
-	def gps_data(self, msg):
-
-		self.px_raw = msg.pose.pose.position.x
-		self.py_raw = msg.pose.pose.position.y
-
-		if np.isnan(self.px_raw ) or np.isnan(self.py_raw):
-			return
-
-		#pos = transform_pos(msg.pose.pose.position, self.tf_buffer, "odom", "base_link")
-
-
-		#vec = quat_mult_vector(tf.transformations.quaternion_inverse(self.rotation), (px, py, 0))
-
-		#print(vec)
-
-		self.gx_raw = self.px_raw - self.x - self.offsetx
-		self.gy_raw = self.py_raw - self.y - self.offsety
-
-
 	def imu_data(self, msg):
-		#pass
 		quat = transform_quat(msg.orientation, self.tf_buffer, "imu_link", "base_link").orientation
 		self.rotation = (quat.x, quat.y, quat.z, quat.w)
 
@@ -175,7 +106,7 @@ class State:
 
 
 	def motor_data(self, msg):
-		self.CMD_speed = msg.linear.x * 0.7
+		self.CMD_speed = msg.linear.x * 0.85
 		self.CMD_angular_speed = msg.angular.z
 
 	def get_covariance(self, val):
@@ -190,18 +121,13 @@ class State:
 
 	def publish_state(self):
 
-		#gps interpolations
-		self.gx = self.gx * 0.997 + 0.003 * self.gx_raw
-		self.gy = self.gy * 0.997 + 0.003 * self.gy_raw
-
 		#slow acceleration and drifting
 		self.angular_speed = self.angular_speed * 0.98 + self.CMD_angular_speed * 0.02
-		self.speed = self.speed * 0.98 + self.CMD_speed * 0.02
+		self.speed = self.speed * 0.97 + self.CMD_speed * 0.03
 
 		current_time = rospy.Time.now()
 		linearmove = self.speed * 1.0/RATE
 
-		#self.angle += self.angular_speed * 1.0/RATE
 		self.angle = self.imu_angle
 
 		turnx = linearmove
@@ -219,7 +145,6 @@ class State:
 		#self.rotation = euler_to_quaternion(0, 0, self.angle)
 
 		self.odom_tf.sendTransform((self.x, self.y, 0), self.rotation, current_time, "base_link", "odom")
-		#self.odom_tf.sendTransform((self.gx, self.gy, 0), (0,0,0,1), current_time, "odom", "map")
 
 		odom = Odometry()
 		odom.header.stamp = current_time
@@ -230,17 +155,6 @@ class State:
 		odom.twist.twist = Twist(Vector3(deltax, deltay, 0), Vector3(0, 0, 0))
 		odom.twist.covariance = self.get_covariance(1.0)
 		self.odom_pub.publish(odom)
-
-
-		#odom1 = Odometry()
-		#odom1.header.stamp = current_time
-		#odom1.header.frame_id = "odom"
-		#odom1.pose.pose = Pose(Point(0, 0, 0), Quaternion(0,0,0,1))
-		#odom1.pose.covariance = self.get_covariance(1.0)
-		#odom1.child_frame_id = "base_link"
-		#odom1.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
-		#odom1.twist.covariance = self.get_covariance(1.0)
-		#self.null_pub.publish(odom1)
 
 
 try:

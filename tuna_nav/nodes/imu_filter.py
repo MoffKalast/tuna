@@ -19,10 +19,6 @@ class IMUFilter:
 		self.tf_buffer = tf2_ros.Buffer()
 		self.listener = tf2_ros.TransformListener(self.tf_buffer)
 
-
-		#self.anglex = 0
-		#self.angley = 0
-		#self.anglez = 0w
 		self.mag_angle = 0
 		self.rotation = (0.0, 0.0, 0.0, 1.0)
 
@@ -33,19 +29,11 @@ class IMUFilter:
 		self.mag_sub = rospy.Subscriber("/imu/mag", MagneticField, self.mag_data)
 
 	def mag_data(self, msg):
-
 		m = msg.magnetic_field
 		self.mag_angle = math.atan2(m.x, m.z);
 
 
 	def imu_data(self, msg):
-		#self.anglex += msg.angular_velocity.x * 0.0255
-		#self.angley -= msg.angular_velocity.z * 0.0255
-		#self.anglez -= msg.angular_velocity.y * 0.0255
-
-		#self.anglex = self.anglex * 0.99
-		#self.angley = self.angley * 0.99
-
 		deltarot = tf.transformations.quaternion_from_euler(msg.angular_velocity.x * 0.0255, -msg.angular_velocity.z * 0.0255, -msg.angular_velocity.y * 0.0255)	
 		self.rotation = tf.transformations.quaternion_multiply(self.rotation, deltarot)
 

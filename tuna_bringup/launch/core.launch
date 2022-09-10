@@ -5,14 +5,18 @@
 	<node name="tuna_battery" pkg="tuna_motor" type="battery.py" output="screen" />
 	<node name="safety_light_node" pkg="safety_light" type="safety_light_node" output="screen"/>
 	<node name="tuna_motor" pkg="tuna_motor" type="motor.py" output="screen"/>
+	<node name="odom_publisher" pkg="tuna_description" type="odom_publisher.py" output="screen"/>
 
 	<include file="$(find mpu9255)/launch/imu.launch"/>
 	<include file="$(find tuna_bringup)/launch/gnss.launch"/>
+
+    <include file="$(find tuna_nav)/launch/move_basic.launch"/>
+    <include file="$(find tuna_nav)/launch/localization.launch"/>
+
 	<include file="$(find tuna_bringup)/launch/ezmap.launch"/>
 	
 	<!--
 	<node name="tuna_shutdown" pkg="tuna_motor" type="shutdown.py" output="screen" />
-	<include file="$(find tuna_nav)/launch/nav.launch"/>
 	<include file="$(find tuna_viz)/launch/debug.launch"/>
 	-->
 

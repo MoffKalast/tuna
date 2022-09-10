@@ -46,7 +46,7 @@ class State:
 		self.rotation = (0.0, 0.0, 0.0, 1.0)
 
 	def motor_data(self, msg):
-		self.CMD_speed = msg.linear.x * 0.5
+		self.CMD_speed = msg.linear.x * 0.85
 		self.CMD_angular_speed = msg.angular.z
 
 	def get_covariance(self, val):

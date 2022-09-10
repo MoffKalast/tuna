@@ -88,13 +88,13 @@ min_score: 0.5
 # For robotic systems with bad odometry, high values should be used.
 #
 # How much the rotation affects the rotation
-srr: 0.6
+srr: 0.2
 # How much the translation affects the translation
-stt: 0.6
+stt: 0.4
 # How much the rotation affect the tranlation
-srt: 0.6
+srt: 0.2
 # How much the translation affects the rotation
-str: 0.6
+str: 0.2
 
 # Landmark sigma scaling factor: srr, sst, ssa
 #
