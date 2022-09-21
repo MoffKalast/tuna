@@ -13,6 +13,14 @@ List of videos about construction and testing:
 
 ![Diagram](tuna_description/img/TunaElectric.png)
 
+# Node Graph
+
+TODO
+
+# Gazebo Model
+
+![Diagram](tuna_description/img/grid.png)
+
 # Installation
 
 On a Pi or on a Noetic desktop for Gazebo usage.
