@@ -1,16 +1,37 @@
 # Tuna ROS Boat
 
-## Installation
+![Diagram](tuna/schematics/image.png)
 
-[Install pigpio](https://abyz.me.uk/rpi/pigpio/download.html)
+As seen in:
+-  [Tuna - ROS Autonomous Boat (Part 1)](https://www.youtube.com/watch?v=CoFgflu3uPA)
+-  Tuna - ROS Autonomous Boat (Part 2)
 
-Install iris_lama and required ezmap packages.
+## Circuit Diagram
 
-Apt deps:
+![Diagram](tuna/schematics/TunaElectric.png)
+
+## Installation (for Gazebo usage)
+
+EZ-Map deps:
 
 ```
-sudo apt install ros-noetic-nmea-navsat-driver
+pip install pyyaml
+sudo apt-get install ros-noetic-rosbridge-suite ros-noetic-tf2-web-republisher python3-smbus ros-noetic-nmea-navsat-driver libudev-dev
+
+cd ~/catkin_ws/src
+git clone https://github.com/UbiquityRobotics/ezmap_core.git
+git clone https://github.com/UbiquityRobotics/ezpkg_battery_widget.git
+git clone https://github.com/UbiquityRobotics/ezpkg_map_screen.git
+git clone https://github.com/UbiquityRobotics/ezpkg_rosbag_widget.git
+
+cd ~/catkin_ws
+rosdep update
+rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
 ```
+
+## Installation (for running on a Pi)
+
+Start with a 20.04 Ubuntu Pi image, with ROS Noetic already installed. Install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
 
 Fix services to set up correct ROS params:
 
@@ -26,7 +47,7 @@ sudo cp ros_setup.bash /etc/ubiquity/ros_setup.bash
 sudo cp ros_setup.sh /etc/ubiquity/ros_setup.sh
 ```
 
-Changes to `/boot/config.txt` for i2c and uart and power saving:
+Changes to `/boot/config.txt` for i2c, uart, and power saving:
 
 ```
 # disable rainbow splash screen for faster booting
@@ -54,7 +75,7 @@ dtparam=eth_led1=4
 
 #### Enable Kernel Interfaces
 
-For the `safety_light` to have the correct access create `/etc/udev/rules.d/99-gpio.rules` with the following contents:
+For the `safety_light` to have the correct kernel interface access create `/etc/udev/rules.d/99-gpio.rules` with the following contents (if it doesn't already exist):
 
 ```
 SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
