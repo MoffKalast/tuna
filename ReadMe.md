@@ -1,4 +1,4 @@
-![Diagram](tuna/schematics/image.png)
+![Diagram](tuna_description/img/image.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -8,7 +8,7 @@
 
 # Circuit Diagram
 
-![Diagram](tuna/schematics/TunaElectric.png)
+![Diagram](tuna_description/img/TunaElectric.png)
 
 # Installation (for Gazebo usage)
 
