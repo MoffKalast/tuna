@@ -6,7 +6,7 @@ import pigpio
 import math
 import sys
 
-from std_msgs.msg import Header
+from std_msgs.msg import Header, String
 from geometry_msgs.msg import Twist
 
 PIN_STBY = 17
@@ -128,6 +128,7 @@ class Controller:
 		self.motor_left = Motor(self.pi, PIN_B1, PIN_B2, PIN_PWM2)
 
 		self.cmdsub = rospy.Subscriber("/cmd_vel", Twist, self.velocity)
+		self.settingsub = rospy.Subscriber("/web_settings", String, self.settings)
 
 		self.m_sleep = True
 		self.m_time = time.time()
@@ -135,6 +136,29 @@ class Controller:
 		self.m_right_vel = 0
 
 		print("Ready")
+
+	def settings(self, msg):
+		global MAX_SPD
+
+		json = msg.data
+
+		if not "\"linear\"" in json:
+			return
+
+		linear = 0.3
+		angular = 0.4
+
+		split = json.split(",")
+		for x in split:
+			if "\"linear\"" in x:
+				linear = float(x.replace("\"","").split(":")[1])
+
+		linear = int(linear*100.0)
+
+		if linear < MIN_SPD:
+			linear = MIN_SPD
+
+		MAX_SPD = linear
 
 	def velocity(self, msg):
 
@@ -152,20 +176,18 @@ class Controller:
 		left_spd = abs(left_vel)
 		right_spd = abs(right_vel)
 
-		if left_spd != 0:
-			if left_spd < MIN_SPD:
-				left_vel = math.copysign(MIN_SPD, left_vel)
-			elif left_spd > MAX_SPD:
-				left_vel = math.copysign(MAX_SPD, left_vel)
+		if left_spd < MIN_SPD:
+			left_spd = MIN_SPD
+		elif left_spd > MAX_SPD:
+			left_spd = MAX_SPD
 
-		if right_spd != 0:
-			if right_spd < MIN_SPD:
-				right_vel = math.copysign(MIN_SPD, right_vel)
-			elif right_spd > MAX_SPD:
-				right_vel = math.copysign(MAX_SPD, right_vel)
+		if right_spd < MIN_SPD:
+			right_spd = MIN_SPD
+		elif right_spd > MAX_SPD:
+			right_spd = MAX_SPD
 
-		self.m_left_vel = left_vel
-		self.m_right_vel = right_vel
+		self.m_left_vel = math.copysign(left_spd, left_vel)
+		self.m_right_vel = math.copysign(right_spd, right_vel)
 
 	def update(self):
 		if self.m_sleep:
@@ -177,6 +199,7 @@ class Controller:
 		else:
 			self.motor_left.set(self.m_left_vel)
 			self.motor_right.set(self.m_right_vel)
+			print(self.m_right_vel, self.m_left_vel)
 
 
 	def stop(self):
