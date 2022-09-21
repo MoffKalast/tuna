@@ -35,10 +35,10 @@ echo -e -n '\xB5\x62\x06\x00\x14\x00\x01\x00\x00\x00\xC0\x08\x00\x00\x00\xE1\x00
 stty -F /dev/ttyAMA0 57600 raw
 
 
-# disable hdmi
+# disable hdmi (saves 30mA)
 sudo /opt/vc/bin/tvservice -o
 
-# disable usb controller
+# disable usb controller (saves 100mA)
 echo '1-1' |sudo tee /sys/bus/usb/drivers/usb/unbind
 
 source /etc/ubiquity/env.sh
