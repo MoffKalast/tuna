@@ -1,16 +1,16 @@
-# Tuna ROS Boat
-
 ![Diagram](tuna/schematics/image.png)
 
-As seen in:
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+### As seen in:
 -  [Tuna - ROS Autonomous Boat (Part 1)](https://www.youtube.com/watch?v=CoFgflu3uPA)
 -  Tuna - ROS Autonomous Boat (Part 2)
 
-## Circuit Diagram
+# Circuit Diagram
 
 ![Diagram](tuna/schematics/TunaElectric.png)
 
-## Installation (for Gazebo usage)
+# Installation (for Gazebo usage)
 
 EZ-Map deps:
 
@@ -29,9 +29,9 @@ rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
 ```
 
-## Installation (for running on a Pi)
+# Installation (for running on a Pi)
 
-Start with a 20.04 Ubuntu Pi image, with ROS Noetic already installed. Install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
+Start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), with ROS Noetic already installed. Install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
 
 Fix services to set up correct ROS params:
 
@@ -47,7 +47,7 @@ sudo cp ros_setup.bash /etc/ubiquity/ros_setup.bash
 sudo cp ros_setup.sh /etc/ubiquity/ros_setup.sh
 ```
 
-Changes to `/boot/config.txt` for i2c, uart, and power saving:
+Changes to `/boot/config.txt` for i2c, uart, and LED power saving:
 
 ```
 # disable rainbow splash screen for faster booting
@@ -55,7 +55,7 @@ disable_splash=1
 
 # Set up UART and disable BT
 dtoverlay=disable-bt
-dtoverlay=uart2
+dtoverlay=uart0
 
 # Set up I2C
 dtoverlay=i2c-gpio,i2c_gpio_sda=2,i2c_gpio_scl=3,bus=1 core_freq=250
@@ -73,7 +73,7 @@ dtparam=eth_led0=4
 dtparam=eth_led1=4
 ```
 
-#### Enable Kernel Interfaces
+### Enable Kernel Interfaces
 
 For the `safety_light` to have the correct kernel interface access create `/etc/udev/rules.d/99-gpio.rules` with the following contents (if it doesn't already exist):
 
@@ -85,3 +85,14 @@ SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", RUN+="/bin/chown root:gpio /s
 
 
 
+# Run
+
+On the Pi (this will also launch automatically at boot via the magni-base service):
+```
+roslaunch tuna_bringup core.launch
+```
+
+In Gazebo:
+```
+roslaunch tuna_gazebo sim.launch
+```
