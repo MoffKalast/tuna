@@ -2,23 +2,30 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### As seen in:
--  [Tuna - ROS Autonomous Boat (Part 1)](https://www.youtube.com/watch?v=CoFgflu3uPA)
--  Tuna - ROS Autonomous Boat (Part 2)
+# About
+
+List of videos about construction and testing:
+
+- ### [Tuna - ROS Autonomous Boat (Part 1)](https://www.youtube.com/watch?v=CoFgflu3uPA)
+- ### Tuna - ROS Autonomous Boat (Part 2)
 
 # Circuit Diagram
 
 ![Diagram](tuna_description/img/TunaElectric.png)
 
-# Installation (for Gazebo usage)
+# Installation
 
-EZ-Map deps:
+On a Pi or on a Noetic desktop for Gazebo usage.
 
 ```
 pip install pyyaml
 sudo apt-get install ros-noetic-rosbridge-suite ros-noetic-tf2-web-republisher python3-smbus ros-noetic-nmea-navsat-driver libudev-dev
 
 cd ~/catkin_ws/src
+git clone https://github.com/MoffKalast/tuna.git
+git clone https://github.com/dpkoch/imu_calib.git
+git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
+
 git clone https://github.com/UbiquityRobotics/ezmap_core.git
 git clone https://github.com/UbiquityRobotics/ezpkg_battery_widget.git
 git clone https://github.com/UbiquityRobotics/ezpkg_map_screen.git
@@ -27,13 +34,14 @@ git clone https://github.com/UbiquityRobotics/ezpkg_rosbag_widget.git
 cd ~/catkin_ws
 rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
+catkin_make
 ```
 
-# Installation (for running on a Pi)
+# Raspberry Pi Specifics
 
-Start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), with ROS Noetic already installed. Install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
+Start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
 
-Fix services to set up correct ROS params:
+Fix services to set up correct ROS params and autorun at boot:
 
 ```
 cd ~/catkin_ws/src/tuna/tuna_bringup/config_scripts
@@ -83,16 +91,18 @@ SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", RUN+="/bin/sh -c 'chown r
 SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", RUN+="/bin/chown root:gpio /sys%p/active_low /sys%p/edge /sys%p/direction /sys%p/value", RUN+="/bin/chmod 660 /sys%p/active_low /sys%p/edge /sys%p/direction /sys%p/value"
 ```
 
-
-
 # Run
 
-On the Pi (this will also launch automatically at boot via the magni-base service):
-```
-roslaunch tuna_bringup core.launch
-```
+## In Gazebo
 
-In Gazebo:
 ```
 roslaunch tuna_gazebo sim.launch
+```
+
+## On a Pi
+
+This launch file will also launch automatically at boot via the magni-base service.
+
+```
+roslaunch tuna_bringup core.launch
 ```
