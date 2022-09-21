@@ -120,6 +120,9 @@ class TFPublisher:
 		self.heading_imu_prev = 0
 
 	def origin(self, msg):
+		if self.origin_fix is None:
+			return UTMtoLLResponse()
+
 		response = UTMtoLLResponse()
 		response.nav_sat = self.origin_fix
 		return response

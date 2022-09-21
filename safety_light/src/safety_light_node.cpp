@@ -46,8 +46,24 @@ void blink_callback(const std_msgs::Bool::ConstPtr& msg)
 
 int main(int argc, char** argv)
 {
-	ros::init(argc, argv, "safety_light", ros::init_options::NoSigintHandler);
-	ros::NodeHandle n;
+	ros::init(argc, argv, "safety_light_node", ros::init_options::NoSigintHandler);
+	ros::NodeHandle n(""), np("~");
+
+	int on_microseconds;
+	double blink_rate;
+	std::string pin;
+	std::string gpio_pin;
+
+	np.param("on_microseconds", on_microseconds, 15000);
+	np.param("blink_rate", blink_rate, 0.8);
+	np.param("pin", pin, std::string("26"));
+	
+	gpio_pin = "gpio" + pin;
+
+	ROS_INFO("Toggling %s",gpio_pin.c_str());
+	ROS_INFO("Rate: %f",blink_rate);
+	ROS_INFO("On duration: %f ms",on_microseconds/1000.0);
+
 	ros::Subscriber blink_sub = n.subscribe("safety_light", 1, blink_callback);
 
 	signal(SIGINT, mySigIntHandler);
@@ -60,7 +76,7 @@ int main(int argc, char** argv)
 		perror("Unable to open /sys/class/gpio/export");
 		exit(1);
 	}
-	if (write(fd, "26", 2) != 2) {
+	if (write(fd, pin.c_str(), 2) != 2) {
 		perror("Error writing to /sys/class/gpio/export");
 		exit(1);
 	}
@@ -69,35 +85,36 @@ int main(int argc, char** argv)
 	ros::Duration(0.5).sleep();
 
 	// Set the pin to be an output by writing "out" to /sys/class/gpio/gpio24/direction
-	fd = open("/sys/class/gpio/gpio26/direction", O_WRONLY);
+	fd = open(("/sys/class/gpio/"+gpio_pin+"/direction").c_str(), O_WRONLY);
 	if (fd == -1) {
-		perror("Unable to open /sys/class/gpio/gpio26/direction");
+		perror(("Unable to open /sys/class/gpio/"+gpio_pin+"/direction").c_str());
 		exit(1);
 	}
 	if (write(fd, "out", 3) != 3) {
-		perror("Error writing to /sys/class/gpio/gpio26/direction");
+		perror(("Error writing to /sys/class/gpio/"+gpio_pin+"/direction").c_str());
 		exit(1);
 	}
 	close(fd);
 
-	fd = open("/sys/class/gpio/gpio26/value", O_WRONLY);
+	fd = open(("/sys/class/gpio/"+gpio_pin+"/value").c_str(), O_WRONLY);
 	if (fd == -1) {
-		perror("Unable to open /sys/class/gpio/gpio26/value");
+		perror(("Unable to open /sys/class/gpio/"+gpio_pin+"/value").c_str());
 		exit(1);
 	}
 
 	write(fd, "1", 1);
-	usleep(15000);
+	usleep(on_microseconds);
 	write(fd, "0", 1);
 
-	ros::Rate loop_rate(0.8);
+	// Blink the pin periodically
+	ros::Rate loop_rate(blink_rate);
 	while (ros::ok() && !g_request_shutdown)
 	{
 		if(do_blink){
 			ROS_INFO("1");
 
 			write(fd, "1", 1);
-			usleep(15000);
+			usleep(on_microseconds);
 			write(fd, "0", 1);
 
 			ROS_INFO("0");	
@@ -117,7 +134,7 @@ int main(int argc, char** argv)
 		perror("Unable to open /sys/class/gpio/unexport");
 		exit(1);
 	}
-	if (write(fd, "26", 2) != 2) {
+	if (write(fd, pin.c_str(), 2) != 2) {
 		perror("Error writing to /sys/class/gpio/unexport");
 		exit(1);
 	}

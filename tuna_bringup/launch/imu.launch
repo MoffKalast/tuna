@@ -1,0 +1,33 @@
+<launch>
+
+	<node pkg="mpu9255" name="mpu9255_node" type="mpu9255_node" output="screen">
+		<param name="print_min_max_mag" value="true"/> <!-- Prints the mag bias values -->
+		<param name="print_min_max_acc" value="true"/> <!-- For checking the range of accel -->
+		<param name="print_rolling_mean_acc" value="true"/> <!-- For checking the stationary bias of accel -->
+
+		<param name="imu_covar" value="0.05"/>
+		<param name="mag_covar" value="0.05"/>
+
+		<param name="acc_bias_x" value="-0.3"/> <!--1.5 -->
+		<param name="acc_bias_y" value="0"/> <!-- -0.48 -->
+		<param name="acc_bias_z" value="0.265"/> <!-- 0.85 -->
+
+		<param name="gyr_bias_x" value="0"/>
+		<param name="gyr_bias_y" value="0"/>
+		<param name="gyr_bias_z" value="0"/>
+
+		<remap from="/imu/data_raw" to="/imu/data_uncalibrated"/>
+	</node>
+
+	<node pkg="imu_calib" name="imu_calibration_node" type="apply_calib">
+		<param name="calib_file" value="$(find tuna_bringup)/param/imu_calib.yaml"/>
+		<param name="calibrate_gyros" value="true"/>
+		<param name="gyro_calib_samples" value="100"/>
+
+		<remap from="raw" to="/imu/data_uncalibrated"/>
+		<remap from="corrected" to="/imu/data_raw"/>
+	</node>
+
+	<node pkg="tuna_nav" name="imu_filter" type="imu_filter.py"/>
+
+</launch>
