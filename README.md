@@ -17,10 +17,6 @@ List of videos about construction and testing:
 
 TODO
 
-# Gazebo Model
-
-![Diagram](tuna_description/img/grid.png)
-
 # Installation
 
 On a Pi or on a Noetic desktop for Gazebo usage.
@@ -45,9 +41,21 @@ rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
 catkin_make
 ```
 
+# Ignition Gazebo
+
+![Diagram](tuna_description/img/grid.png)
+
+https://gazebosim.org/docs/fortress/install
+
+https://github.com/gazebosim/ros_gz/tree/noetic#from-source
+
+
+
+
+
 # Raspberry Pi Specifics
 
-Start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
+To run this on a Pi 4, start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
 
 Fix services to set up correct ROS params and autorun at boot:
 

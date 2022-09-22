@@ -1,0 +1,21 @@
+<package format="2">
+	<name>tuna_gazebo</name>
+	<version>0.1.0</version>
+	<description>Gazebo setup for Tuna.</description>
+
+	<maintainer email="vid.rijavec@gmail.com">Vid Rijavec</maintainer>
+
+	<license>MIT</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+
+	<depend>std_msgs</depend>
+
+	<build_depend>message_generation</build_depend>
+	<build_export_depend>message_runtime</build_export_depend>
+
+	<exec_depend>message_runtime</exec_depend>
+	<exec_depend>rospy</exec_depend>
+</package>
+
+

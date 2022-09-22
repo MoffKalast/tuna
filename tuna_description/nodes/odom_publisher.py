@@ -5,16 +5,19 @@ import rospy
 import time
 import math
 import tf
+import random
 
 from std_msgs.msg import String, Bool
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, TransformStamped
-from sensor_msgs.msg import Imu, MagneticField
+from sensor_msgs.msg import Imu, MagneticField, JointState
 
 import tf2_ros
 import tf2_geometry_msgs
 
 RATE = 20.0
+MIN_SPD = 0.15
+MAX_SPD = 0.40
 
 def transform_pos(position, tf_buffer, from_frame, to_frame):
 	pose_stamped = tf2_geometry_msgs.PoseStamped()
@@ -70,6 +73,58 @@ def quat_mult_vector(q1, v1):
 
 	return vec 
 
+def clamp(val, minval, maxval):
+	if val < minval:
+		return minval
+	if val > maxval:
+		return maxval
+	return val
+
+def diffdrive(x,  y):
+
+		x = clamp(x, -MAX_SPD, MAX_SPD)
+		y = clamp(y, -MAX_SPD, MAX_SPD)
+
+		# First Compute the angle in deg
+		# First hypotenuse
+		z = math.sqrt(x * x + y * y)
+
+		if z == 0:
+			return [0,0]
+
+		# angle in radians
+		rad = math.acos(math.fabs(x) / z)
+
+		# and in degrees
+		angle = rad * 180 / math.pi
+
+		# Now angle indicates the measure of turn
+		# Along a straight line, with an angle o, the turn co-efficient is same
+		# this applies for angles between 0-90, with angle 0 the coeff is -1
+		# with angle 45, the co-efficient is 0 and with angle 90, it is 1
+		tcoeff = -1 + (angle / 90) * 2
+		turn = tcoeff * math.fabs(math.fabs(y) - math.fabs(x))
+		turn = round(turn * 100, 0) / 100
+
+		# And max of y or x is the movement
+		mov = max(math.fabs(y), math.fabs(x))
+
+		# First and third quadrant
+		if (x >= 0 and y >= 0) or (x < 0 and y < 0):
+			rawLeft = mov
+			rawRight = turn
+		else:
+			rawRight = mov
+			rawLeft = turn
+
+		rawRight = round(rawRight * 100)
+		rawLeft = round(rawLeft * 100)
+
+		if y < 0:
+			return [-rawLeft, -rawRight]
+
+		return [rawRight, rawLeft]
+
 class State:
 	def __init__(self):
 		rospy.init_node('odometry_publisher')
@@ -83,6 +138,7 @@ class State:
 		self.imu_sub = rospy.Subscriber("/imu/data", Imu, self.imu_data)
 
 		self.odom_pub = rospy.Publisher("/odometry/propeller", Odometry, queue_size=5)
+		self.joint_pub = rospy.Publisher("/joint_states", JointState, queue_size=1)
 
 		self.x = 0
 		self.y = 0
@@ -91,8 +147,12 @@ class State:
 		self.speed = 0
 		self.angular_speed = 0
 
-		self.CMD_speed = 0
-		self.CMD_angular_speed = 0
+		self.cmd_linear_speed = 0
+		self.cmd_angular_speed = 0
+		self.cmd_vel_msg = None
+
+		self.prop_left = 0.0
+		self.prop_right = 0.0
 
 		self.rotation = (0.0, 0.0, 0.0, 1.0)
 		self.imu_angle = 0
@@ -106,8 +166,9 @@ class State:
 
 
 	def motor_data(self, msg):
-		self.CMD_speed = msg.linear.x * 0.85
-		self.CMD_angular_speed = msg.angular.z
+		self.cmd_linear_speed = clamp(msg.linear.x * 0.85, -MAX_SPD, MAX_SPD)
+		self.cmd_angular_speed = clamp(msg.angular.z, -MAX_SPD, MAX_SPD)
+		self.cmd_vel_msg = msg
 
 	def get_covariance(self, val):
 		array = np.zeros(36)
@@ -122,8 +183,8 @@ class State:
 	def publish_state(self):
 
 		#slow acceleration and drifting
-		self.angular_speed = self.angular_speed * 0.98 + self.CMD_angular_speed * 0.02
-		self.speed = self.speed * 0.97 + self.CMD_speed * 0.03
+		self.angular_speed = self.angular_speed * 0.98 + self.cmd_angular_speed * 0.02
+		self.speed = self.speed * 0.97 + self.cmd_linear_speed * 0.03
 
 		current_time = rospy.Time.now()
 		linearmove = self.speed * 1.0/RATE
@@ -156,6 +217,17 @@ class State:
 		odom.twist.covariance = self.get_covariance(1.0)
 		self.odom_pub.publish(odom)
 
+		if not self.cmd_vel_msg is None:
+			left_vel, right_vel = diffdrive(self.cmd_vel_msg.angular.z, self.cmd_vel_msg.linear.x)
+
+			self.prop_left += left_vel*0.03
+			self.prop_right += right_vel*0.03
+
+		state = JointState()
+		state.header.stamp = current_time
+		state.name = ["base_to_prop_left", "base_to_prop_right"]
+		state.position = [self.prop_left  , -self.prop_right]
+		self.joint_pub.publish(state)
 
 try:
 	state = State()
