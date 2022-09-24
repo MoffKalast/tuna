@@ -1,0 +1,6 @@
+<launch>
+
+	<node name="tuna_battery" pkg="tuna_motor" type="battery.py" output="screen" />
+	<node name="tuna_motor" pkg="tuna_motor" type="motor.py" output="screen"/>
+
+</launch> 

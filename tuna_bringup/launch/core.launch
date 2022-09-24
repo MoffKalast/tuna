@@ -1,12 +1,10 @@
 <launch>
 
-	<include file="$(find safety_light)/launch/light.launch"/>
-	<include file="$(find tuna_description)/launch/transform.launch"/>
-	
-	<node name="tuna_battery" pkg="tuna_motor" type="battery.py" output="screen" />
-	<node name="tuna_motor" pkg="tuna_motor" type="motor.py" output="screen"/>
-	<node name="odom_publisher" pkg="tuna_description" type="odom_publisher.py" output="screen"/>
+	<include file="$(find tuna_description)/launch/model.launch"/>
+	<include file="$(find tuna_description)/launch/odometry.launch"/>
 
+	<include file="$(find safety_light)/launch/light.launch"/>
+	<include file="$(find tuna_motor)/launch/electronics.launch"/>
 	<include file="$(find tuna_bringup)/launch/imu.launch"/>
 	<include file="$(find tuna_bringup)/launch/gnss.launch"/>
 
@@ -14,10 +12,5 @@
     <include file="$(find tuna_nav)/launch/localization.launch"/>
 
 	<include file="$(find tuna_bringup)/launch/ezmap.launch"/>
-	
-	<!--
-	<node name="tuna_shutdown" pkg="tuna_motor" type="shutdown.py" output="screen" />
-	<include file="$(find tuna_viz)/launch/debug.launch"/>
-	-->
 
 </launch>
