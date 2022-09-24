@@ -25,4 +25,7 @@
     <!-- Run autoloader and http server. -->
     <include file="$(find ezmap_autoloader_web)/launch/server.launch"/>
 
+
+    <node name="settings_parser" pkg="tuna_ezmap" type="settings_parser.py"/>
+
 </launch>

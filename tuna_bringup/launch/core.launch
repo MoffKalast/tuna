@@ -11,6 +11,6 @@
     <include file="$(find tuna_nav)/launch/move_basic.launch"/>
     <include file="$(find tuna_nav)/launch/localization.launch"/>
 
-	<include file="$(find tuna_bringup)/launch/ezmap.launch"/>
+	<include file="$(find tuna_ezmap)/launch/ezmap.launch"/>
 
 </launch>

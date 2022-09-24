@@ -7,7 +7,7 @@ import math
 import sys
 
 from std_msgs.msg import Header, String
-from geometry_msgs.msg import Twist
+from sensor_msgs.msg import JointState
 
 PIN_STBY = 17
 PIN_A1 = 27
@@ -20,7 +20,7 @@ PIN_PWM1 = 12
 PIN_PWM2 = 13
 
 MIN_SPD = 15
-MAX_SPD = 40
+MAX_SPD = 45
 
 DEADMAN = 0.6 # seconds
 
@@ -30,52 +30,6 @@ def clamp(val, minval, maxval):
 	if val > maxval:
 		return maxval
 	return val
-
-def diffdrive(x,  y):
-
-		x = clamp(x, -1.0, 1.0)
-		y = clamp(y, -1.0, 1.0)
-
-		# First Compute the angle in deg
-		# First hypotenuse
-		z = math.sqrt(x * x + y * y)
-
-		# angle in radians
-		rad = math.acos(math.fabs(x) / z)
-
-		# and in degrees
-		angle = rad * 180 / math.pi
-
-		# Now angle indicates the measure of turn
-		# Along a straight line, with an angle o, the turn co-efficient is same
-		# this applies for angles between 0-90, with angle 0 the coeff is -1
-		# with angle 45, the co-efficient is 0 and with angle 90, it is 1
-		tcoeff = -1 + (angle / 90) * 2
-		turn = tcoeff * math.fabs(math.fabs(y) - math.fabs(x))
-		turn = round(turn * 100, 0) / 100
-
-		# And max of y or x is the movement
-		mov = max(math.fabs(y), math.fabs(x))
-
-		# First and third quadrant
-		if (x >= 0 and y >= 0) or (x < 0 and y < 0):
-			rawLeft = mov
-			rawRight = turn
-		else:
-			rawRight = mov
-			rawLeft = turn
-
-		rawRight = round(rawRight * 100)
-		rawLeft = round(rawLeft * 100)
-
-		if y < 0:
-			return [-rawLeft, -rawRight]
-
-		return [rawRight, rawLeft]
-
-def map(v, in_min, in_max, out_min, out_max):
-	v = clamp(v, in_min, in_max)
-	return (v - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
 class Motor:
 
@@ -127,64 +81,32 @@ class Controller:
 		self.motor_right = Motor(self.pi, PIN_A1, PIN_A2, PIN_PWM1)
 		self.motor_left = Motor(self.pi, PIN_B1, PIN_B2, PIN_PWM2)
 
-		self.cmdsub = rospy.Subscriber("/cmd_vel", Twist, self.velocity)
-		self.settingsub = rospy.Subscriber("/web_settings", String, self.settings)
+		self.cmdsub = rospy.Subscriber("diff_drive", JointState, self.velocity)
 
 		self.m_sleep = True
 		self.m_time = time.time()
 		self.m_left_vel = 0
 		self.m_right_vel = 0
 
-		print("Ready")
-
-	def settings(self, msg):
-		global MAX_SPD
-
-		json = msg.data
-
-		if not "\"linear\"" in json:
-			return
-
-		linear = 0.3
-		angular = 0.4
-
-		split = json.split(",")
-		for x in split:
-			if "\"linear\"" in x:
-				linear = float(x.replace("\"","").split(":")[1])
-
-		linear = int(linear*100.0)
-
-		if linear < MIN_SPD:
-			linear = MIN_SPD
-
-		MAX_SPD = linear
+		rospy.loginfo("Motors Ready")
 
 	def velocity(self, msg):
 
 		self.m_time = time.time()
 		self.m_sleep = False
 
-		if msg.angular.z == 0 and msg.linear.x == 0:
+		left_vel = int(msg.velocity[0] * 100)
+		right_vel = int(msg.velocity[1] * 100)
+
+		if left_vel == 0 and right_vel == 0:
 			self.stop()
 			return
 
 		self.pi.write(PIN_STBY, 1)
 
-		left_vel, right_vel = diffdrive(msg.angular.z, msg.linear.x)
-
-		left_spd = abs(left_vel)
-		right_spd = abs(right_vel)
-
-		if left_spd < MIN_SPD:
-			left_spd = MIN_SPD
-		elif left_spd > MAX_SPD:
-			left_spd = MAX_SPD
-
-		if right_spd < MIN_SPD:
-			right_spd = MIN_SPD
-		elif right_spd > MAX_SPD:
-			right_spd = MAX_SPD
+		# just in case
+		left_spd = clamp(abs(left_vel), MIN_SPD, MAX_SPD)
+		right_spd = clamp(abs(right_vel), MIN_SPD, MAX_SPD)
 
 		self.m_left_vel = math.copysign(left_spd, left_vel)
 		self.m_right_vel = math.copysign(right_spd, right_vel)
