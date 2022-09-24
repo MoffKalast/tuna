@@ -1,9 +1,0 @@
-<launch>
-
-	<node name="safety_light_node" pkg="safety_light" type="safety_light_node" output="screen">
-		<param name="pin" value="26" />
-		<param name="on_microseconds" value="15000" />
-		<param name="blink_rate" value="0.8" />
-	</node>
-
-</launch>
