@@ -3,7 +3,7 @@
 	<link name="base_link">
 		<visual>
 			<geometry>
-				<mesh filename="package://tuna_description/meshes/boat.dae"/>
+				<mesh filename="package://tuna_gazebo/meshes/boat.dae"/>
 			</geometry>
 		</visual>
 	</link>
@@ -11,7 +11,7 @@
 	<link name="prop_left">
 		<visual>
 			<geometry>
-				<mesh filename="package://tuna_description/meshes/prop_left.dae"/>
+				<mesh filename="package://tuna_gazebo/meshes/prop_left.dae"/>
 			</geometry>
 		</visual>
 	</link>
@@ -19,7 +19,7 @@
 	<link name="prop_right">
 		<visual>
 			<geometry>
-				<mesh filename="package://tuna_description/meshes/prop_right.dae"/>
+				<mesh filename="package://tuna_gazebo/meshes/prop_right.dae"/>
 			</geometry>
 		</visual>
 	</link>
@@ -44,15 +44,15 @@
 		<child link="prop_right"/>
 		<origin xyz="-0.14 -0.018 -0.043" rpy="0 -0.19 0" />
 		<limit effort="1" velocity="12"/>
-    	<axis xyz="1 0 0"/>
- 	</joint>
+		<axis xyz="1 0 0"/>
+	</joint>
 
- 	<joint name="base_to_prop_left" type="continuous">
+	<joint name="base_to_prop_left" type="continuous">
 		<parent link="base_link"/>
 		<child link="prop_left"/>
 		<origin xyz="-0.14 0.018 -0.043" rpy="0 -0.19 0" />
 		<limit effort="1" velocity="12"/>
-    	<axis xyz="1 0 0"/>
- 	</joint>
+		<axis xyz="1 0 0"/>
+	</joint>
 
 </robot>
