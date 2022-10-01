@@ -15,7 +15,8 @@ List of videos about construction and testing:
 
 # Node Graph
 
-TODO
+
+![Diagram](tuna_description/img/NodeGraph.png)
 
 # Installation
 
@@ -27,10 +28,6 @@ sudo apt-get install ros-noetic-rosbridge-suite ros-noetic-tf2-web-republisher p
 
 cd ~/catkin_ws/src
 git clone https://github.com/MoffKalast/tuna.git
-git clone https://github.com/MoffKalast/diff_drive_simple.git
-git clone https://github.com/MoffKalast/safety_light.git
-git clone https://github.com/MoffKalast/mpu9255.git
-
 git clone https://github.com/dpkoch/imu_calib.git
 git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
 
@@ -55,8 +52,6 @@ https://github.com/gazebosim/ros_gz/tree/noetic#from-source
 
 
 # Raspberry Pi Specifics
-
-
 
 To run this on a Pi 4, start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
 
