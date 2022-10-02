@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+
+	<node name="tuna_ign_bridge" pkg="ros_ign_bridge" type="parameter_bridge"
+
+		args="	/model/boat/joint/base_to_prop_right/cmd_pos@std_msgs/Float64@ignition.msgs.Double
+				/model/boat/joint/base_to_prop_left/cmd_pos@std_msgs/Float64@ignition.msgs.Double
+
+				/gnss/fix@sensor_msgs/NavSatFix@ignition.msgs.NavSat
+				/model/boat/battery/battery/state@sensor_msgs/BatteryState@ignition.msgs.BatteryState
+				/imu@sensor_msgs/Imu@ignition.msgs.IMU
+
+				/ocean_current@geometry_msgs/Vector3@ignition.msgs.Vector3d
+		">
+
+		<remap from="/imu" to="imu/data"/>
+		<remap from="/model/boat/battery/battery/state" to="battery_state"/>
+		<remap from="/model/boat/joint/base_to_prop_right/cmd_pos" to="prop_spd_right"/>
+		<remap from="/model/boat/joint/base_to_prop_left/cmd_pos" to="prop_spd_left"/>
+
+	</node>
+
+	<node name="ign_interfacer" pkg="tuna_gazebo" type="ign_interfacer.py"/>
+
+
+</launch>

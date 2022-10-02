@@ -1,11 +1,11 @@
 <launch>
 
-	<node name="diff_drive_node" pkg="diff_drive_simple" type="diff_drive.py" output="screen">
+
+	<node name="diff_drive_node" pkg="diff_drive_simple" type="diff_drive.py">
 		<param name="min_speed" value="0.15" />
 		<param name="max_speed" value="0.45" />
 	</node>
 
-	<node name="odom_publisher" pkg="tuna_description" type="odom_publisher.py" output="screen"/>
-
+	<node name="odom_publisher" pkg="tuna_description" type="odom_publisher.py"/>
 
 </launch>
