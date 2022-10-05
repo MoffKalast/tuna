@@ -14,9 +14,8 @@
 
     <node name="gps_tf_pub" pkg="tuna_nav" type="tf_pub.py" output="screen">
         <remap from="gps_tf_reset" to="iris_lama_ros/reset_map"/>
-        <remap from="gps_tf_origin" to="iris_lama_ros/UTMtoLL"/>
         <remap from="odom" to="/odometry/propeller" />
-    </node>>
+    </node>
 
     <node name="light_nav_indicator" pkg="tuna_nav" type="light_indicator.py" output="screen"/>
     

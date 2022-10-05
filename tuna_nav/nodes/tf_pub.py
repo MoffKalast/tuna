@@ -22,9 +22,6 @@ from geometry_msgs.msg import Transform, TransformStamped, PoseStamped, TwistWit
 from tf2_msgs.msg import TFMessage
 from visualization_msgs.msg import Marker
 
-from iris_lama_ros.srv import UTMtoLL, UTMtoLLResponse
-from iris_lama_ros.msg import GNSSReference
-
 from tf.transformations import quaternion_from_euler, euler_from_quaternion, quaternion_multiply, quaternion_conjugate, quaternion_inverse
 
 def transform_quat(orientation, tf_buffer, from_frame, to_frame):
@@ -79,7 +76,7 @@ class TFPublisher:
 
 		self.origin_pub = rospy.Publisher("odom/gps/origin", Odometry, queue_size=1)
 
-		self.init()
+		self.init({})
 
 		self.tf_sub = rospy.Subscriber('/tf', TFMessage, self.tf_callback)
 		self.imu_sub = rospy.Subscriber("imu/data", Imu, self.imu_callback)
@@ -87,10 +84,10 @@ class TFPublisher:
 		self.gps_sub = rospy.Subscriber("odom/gps", Odometry, self.gps_callback)
 		self.fix_sub = rospy.Subscriber("gnss/fix", NavSatFix, self.fix_callback)
 
-		self.origin_srv = rospy.Service('gps_tf_origin', UTMtoLL, self.origin)
+		self.fix_origin_pub = rospy.Publisher("gnss/origin_fix", NavSatFix, queue_size=1, latch=True)
 		self.reset_srv = rospy.Service('gps_tf_reset', Empty, self.init)
 
-	def init(self):
+	def init(self, msg):
 		self.tf_data = {}
 
 		self.odom_delayed_x = 0
@@ -119,14 +116,6 @@ class TFPublisher:
 		self.heading_imu = 0
 		self.heading_imu_prev = 0
 
-	def origin(self, msg):
-		if self.origin_fix is None:
-			return UTMtoLLResponse()
-
-		response = UTMtoLLResponse()
-		response.nav_sat = self.origin_fix
-		return response
-
 	def tf_callback(self, msg):
 		for tf in msg.transforms:
 			if tf.header.frame_id == "base_link" and tf.child_frame_id == "imu":
@@ -136,6 +125,7 @@ class TFPublisher:
 	def fix_callback(self, msg):
 		if self.origin_fix is None and msg.status.status != -1:
 			 self.origin_fix = msg
+			 self.fix_origin_pub.publish(msg)
 
 		self.fix_msg = msg
 

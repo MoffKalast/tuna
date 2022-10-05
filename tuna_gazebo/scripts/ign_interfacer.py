@@ -4,6 +4,7 @@ import numpy as np
 import rospy
 import time
 import math
+import random
 import tf
 
 from std_msgs.msg import Header, String, Float64
@@ -53,8 +54,8 @@ class IGNInterfacer:
 		left_spd = clamp(abs(left_vel), MIN_SPD, MAX_SPD)
 		right_spd = clamp(abs(right_vel), MIN_SPD, MAX_SPD)
 
-		self.m_left_vel = math.copysign(left_spd, left_vel)
-		self.m_right_vel = math.copysign(right_spd, right_vel)
+		self.m_left_vel = math.copysign(left_spd, left_vel) + random.random() * 0.02
+		self.m_right_vel = math.copysign(right_spd, right_vel) + random.random() * 0.02
 
 	def update(self):
 		if self.m_sleep:

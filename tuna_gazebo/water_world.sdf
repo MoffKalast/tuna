@@ -11,8 +11,10 @@
 		<spherical_coordinates>
 			<surface_model>EARTH_WGS84</surface_model>
 			<world_frame_orientation>ENU</world_frame_orientation>
-			<latitude_deg>-22.986687</latitude_deg>
-			<longitude_deg>-43.202500999999998</longitude_deg>
+			<!--<latitude_deg>43.37887</latitude_deg>
+			<longitude_deg>16.60146</longitude_deg>-->
+			<latitude_deg>46.06661</latitude_deg>,
+			<longitude_deg>14.46993</longitude_deg>
 			<elevation>0</elevation>
 			<heading_deg>0</heading_deg>
 		</spherical_coordinates>
@@ -33,7 +35,137 @@
 		<plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system'/>
 		<plugin name="ignition::gazebo::systems::Imu" filename="libignition-gazebo-imu-system.so"></plugin>
 
-		<gravity>0 0 -9.8</gravity>
+		<gui fullscreen='false'>
+			<plugin name='3D View' filename='MinimalScene'>
+				<ignition-gui>
+					<title>3D View</title>
+					<property type='bool' key='showTitleBar'>false</property>
+					<property type='string' key='state'>docked</property>
+				</ignition-gui>
+				<engine>ogre2</engine>
+				<scene>scene</scene>
+				<ambient_light>0.4 0.4 0.4</ambient_light>
+				<background_color>0.8 0.8 0.8</background_color>
+				<camera_pose>0 -6 8 0 0.8 1.56</camera_pose>
+			</plugin>
+			<plugin name='Entity context menu' filename='EntityContextMenuPlugin'>
+				<ignition-gui>
+					<property key='state' type='string'>floating</property>
+					<property key='width' type='double'>5</property>
+					<property key='height' type='double'>5</property>
+					<property key='showTitleBar' type='bool'>false</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='Scene Manager' filename='GzSceneManager'>
+				<ignition-gui>
+					<property key='resizable' type='bool'>false</property>
+					<property key='width' type='double'>5</property>
+					<property key='height' type='double'>5</property>
+					<property key='state' type='string'>floating</property>
+					<property key='showTitleBar' type='bool'>false</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='Interactive view control' filename='InteractiveViewControl'>
+				<ignition-gui>
+					<property key='resizable' type='bool'>false</property>
+					<property key='width' type='double'>5</property>
+					<property key='height' type='double'>5</property>
+					<property key='state' type='string'>floating</property>
+					<property key='showTitleBar' type='bool'>false</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='Camera Tracking' filename='CameraTracking'>
+				<ignition-gui>
+					<property key='resizable' type='bool'>false</property>
+					<property key='width' type='double'>5</property>
+					<property key='height' type='double'>5</property>
+					<property key='state' type='string'>floating</property>
+					<property key='showTitleBar' type='bool'>false</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='Select Entities' filename='SelectEntities'>
+				<ignition-gui>
+					<property key='resizable' type='bool'>false</property>
+					<property key='width' type='double'>5</property>
+					<property key='height' type='double'>5</property>
+					<property key='state' type='string'>floating</property>
+					<property key='showTitleBar' type='bool'>false</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='Spawn Entities' filename='Spawn'>
+				<ignition-gui>
+					<property key='resizable' type='bool'>false</property>
+					<property key='width' type='double'>5</property>
+					<property key='height' type='double'>5</property>
+					<property key='state' type='string'>floating</property>
+					<property key='showTitleBar' type='bool'>false</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='World control' filename='WorldControl'>
+				<ignition-gui>
+					<title>World control</title>
+					<property type='bool' key='showTitleBar'>false</property>
+					<property type='bool' key='resizable'>false</property>
+					<property type='double' key='height'>72</property>
+					<property type='double' key='width'>121</property>
+					<property type='double' key='z'>1</property>
+					<property type='string' key='state'>floating</property>
+					<anchors target='3D View'>
+						<line own='left' target='left'/>
+						<line own='bottom' target='bottom'/>
+					</anchors>
+				</ignition-gui>
+				<play_pause>true</play_pause>
+				<step>true</step>
+				<start_paused>true</start_paused>
+				<use_event>true</use_event>
+			</plugin>
+			<plugin name='World stats' filename='WorldStats'>
+				<ignition-gui>
+					<title>World stats</title>
+					<property type='bool' key='showTitleBar'>false</property>
+					<property type='bool' key='resizable'>false</property>
+					<property type='double' key='height'>110</property>
+					<property type='double' key='width'>290</property>
+					<property type='double' key='z'>1</property>
+					<property type='string' key='state'>floating</property>
+					<anchors target='3D View'>
+						<line own='right' target='right'/>
+						<line own='bottom' target='bottom'/>
+					</anchors>
+				</ignition-gui>
+				<sim_time>true</sim_time>
+				<real_time>true</real_time>
+				<real_time_factor>true</real_time_factor>
+				<iterations>true</iterations>
+			</plugin>
+			<plugin name='Transform control' filename='TransformControl'>
+				<ignition-gui>
+					<property key='resizable' type='bool'>false</property>
+					<property key='width' type='double'>250</property>
+					<property key='height' type='double'>50</property>
+					<property key='state' type='string'>floating</property>
+					<property key='showTitleBar' type='bool'>false</property>
+					<property key='cardBackground' type='string'>#777777</property>
+				</ignition-gui>
+				<legacy>false</legacy>
+			</plugin>
+			<plugin name='Entity tree' filename='EntityTree'>
+				<ignition-gui>
+					<property type='string' key='state'>docked</property>
+				</ignition-gui>
+			</plugin>
+			<plugin name='NavSat Map' filename='NavSatMap'>
+				<ignition-gui>
+					<title>GNSS</title>
+					<property key='state' type='string'>docked</property>
+				</ignition-gui>
+				<topic>/gnss/fix</topic>
+				<topic_picker>true</topic_picker>
+			</plugin>
+		</gui>
+
+		<gravity>0 0 -9.81</gravity>
 		<magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
 		<atmosphere type='adiabatic'/>
 		<scene>
@@ -44,9 +176,11 @@
 		</scene>
 
 		<model name='water_plane'>
+			<pose>-91.7405 76.9637 0 0 0 0</pose>
 			<static>true</static>
 			<link name='link'>
 				<visual name='water_plane'>
+					<pose>0 0 0 0 -0 0</pose>
 					<geometry>
 						<plane>
 							<size>300 300</size>
@@ -54,12 +188,13 @@
 						</plane>
 					</geometry>
 					<material>
-						<ambient>0.3, 0.62,  0.75 0.8</ambient>
-						<diffuse>0.3, 0.62,  0.75 0.8</diffuse>
-						<specular>1 1 1 0.9</specular>
+						<ambient>0.4 0.72 0.85 0.3</ambient>
+						<diffuse>0.4 0.72 0.85 0.3</diffuse>
+						<specular>1 1 1 0.3</specular>
 					</material>
 				</visual>
 				<visual name='underwater_plane'>
+					<pose>0 0 0 0 -0 0</pose>
 					<geometry>
 						<plane>
 							<size>300 300</size>
@@ -67,12 +202,11 @@
 						</plane>
 					</geometry>
 					<material>
-						<ambient>0.1, 0.32,  0.45 0.95</ambient>
-						<diffuse>0.1, 0.32,  0.45 0.95</diffuse>
-						<specular>1 1 1 1.0</specular>
+						<ambient>0.1, 0.32, 0.45 0.9</ambient>
+						<diffuse>0.1, 0.32, 0.45 0.9</diffuse>
+						<specular>1 1 1 0.9</specular>
 					</material>
 				</visual>
-				<pose>0 0 0 0 -0 0</pose>
 				<inertial>
 					<pose>0 0 0 0 -0 0</pose>
 					<mass>1</mass>
@@ -88,6 +222,48 @@
 				<enable_wind>false</enable_wind>
 			</link>
 			<pose>0 0 0 0 -0 0</pose>
+			<self_collide>false</self_collide>
+		</model>
+
+		<model name='base'>
+			<pose>0 0 0 0 0 0</pose>
+			<model name='ground'>
+				<pose>-91.7405 76.9637 0 0 0 0</pose>
+				<link name='ground_link'>
+					<inertial>
+						<mass>1.0</mass>
+						<pose>-0.03 0 -0.02 0 0 0</pose>
+						<inertia>
+							<ixx>1</ixx>
+							<ixy>0</ixy>
+							<ixz>0</ixz>
+							<iyy>1</iyy>
+							<iyz>0</iyz>
+							<izz>1</izz>
+						</inertia>
+					</inertial>
+
+					<visual name='ground_visual'>
+						<geometry>
+							<mesh>
+								<uri>file://meshes/map.dae</uri>
+							</mesh>
+						</geometry>
+					</visual>
+
+					<collision name='Cube'>
+							<pose>0.000 0.000 -10.012 0 0 0</pose>
+							<geometry><box>
+									<size>0.387 0.103 0.033 </size>
+							</box></geometry>
+							<surface><friction><ode>
+									<mu>0.1</mu><mu2>0.1</mu2>
+							</ode></friction></surface>
+					</collision>
+
+				</link>
+			</model>
+			<static>true</static>
 			<self_collide>false</self_collide>
 		</model>
 
@@ -237,7 +413,18 @@
 						<always_on>true</always_on>
 						<update_rate>5</update_rate>
 						<topic>gnss/fix</topic>
-						<gps/>
+						<gps>
+							<position_sensing>
+								<horizontal>
+									<noise type="gaussian">
+									</noise>
+								</horizontal>
+								<vertical>
+									<noise type="gaussian">
+									</noise>
+								</vertical>
+							</position_sensing>
+						</gps>
 					</sensor>
 
 				</link>
@@ -297,18 +484,18 @@
 
 				<plugin name='ignition::gazebo::systems::Hydrodynamics' filename='ignition-gazebo-hydrodynamics-system'>
 					<link_name>base_link</link_name>
-					<xDotU>-0.0015</xDotU>
-					<yDotV>-0.0015</yDotV>
-					<zDotW>-0.0015</zDotW>
+					<xDotU>-0.005</xDotU>
+					<yDotV>-0.005</yDotV>
+					<zDotW>-0.005</zDotW>
 
-					<kDotP>-0.0015</kDotP>
-					<mDotQ>-0.0015</mDotQ>
-					<nDotR>-0.0015</nDotR>
+					<kDotP>-0.005</kDotP>
+					<mDotQ>-0.005</mDotQ>
+					<nDotR>-0.005</nDotR>
 
-					<xUU>-2.0</xUU>
-					<xU>0</xU>
-					<yVV>-2.0</yVV>
-					<yV>0</yV>
+					<xUU>-1.2</xUU>
+					<xU>-0.08</xU>
+					<yVV>-1.2</yVV>
+					<yV>-0.08</yV>
 					<zWW>-30.0</zWW>
 					<zW>0</zW>
 
@@ -316,8 +503,8 @@
 					<kP>0</kP>
 					<mQQ>-2.4</mQQ>
 					<mQ>0</mQ>
-					<nRR>-0.001</nRR>
-					<nR>0</nR>
+					<nRR>0.0001</nRR>
+					<nR>-0.001</nR>
 
 					<default_current>0 0 0</default_current>
 
@@ -344,7 +531,7 @@
 				</link>
 
 				<link name="prop_right">
-					<pose>-0.14 0.018 -0.043 0 -0.05 0</pose>
+					<pose>-0.14 0.018 -0.043 0 -0.05 0</pose> 
 					<inertial>
 						<mass>0.01</mass>
 						<inertia>
@@ -409,16 +596,16 @@
 
 				<plugin name='ignition::gazebo::systems::Thruster' filename='ignition-gazebo-thruster-system'>
 					<joint_name>base_to_prop_left</joint_name>
-					<thrust_coefficient>0.001</thrust_coefficient>
+					<thrust_coefficient>0.01</thrust_coefficient>
 					<fluid_density>1000</fluid_density>
-					<propeller_diameter>0.03</propeller_diameter>
+					<propeller_diameter>0.025</propeller_diameter>
 				</plugin>
 
 				<plugin name='ignition::gazebo::systems::Thruster' filename='ignition-gazebo-thruster-system'>
 					<joint_name>base_to_prop_right</joint_name>
-					<thrust_coefficient>0.001</thrust_coefficient>
+					<thrust_coefficient>0.01</thrust_coefficient>
 					<fluid_density>1000</fluid_density>
-					<propeller_diameter>0.03</propeller_diameter>
+					<propeller_diameter>0.025</propeller_diameter>
 				</plugin>
 
 				<plugin name='ignition::gazebo::systems::LinearBatteryPlugin' filename='ignition-gazebo-linearbatteryplugin-system'>
