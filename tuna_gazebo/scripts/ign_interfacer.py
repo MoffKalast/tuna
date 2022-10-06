@@ -9,6 +9,7 @@ import tf
 
 from std_msgs.msg import Header, String, Float64
 from sensor_msgs.msg import JointState
+from geometry_msgs.msg import Vector3, Twist
 
 MIN_SPD = 0.15
 MAX_SPD = 0.45
@@ -30,7 +31,7 @@ class IGNInterfacer:
 		self.right_pub = rospy.Publisher("prop_spd_right", Float64, queue_size=1)
 		self.left_pub = rospy.Publisher("prop_spd_left", Float64, queue_size=1)
 
-		self.cmdsub = rospy.Subscriber("diff_drive", JointState, self.velocity)
+		self.diff_drive_sub = rospy.Subscriber("diff_drive", JointState, self.diff_drive_cb)
 
 		self.m_sleep = True
 		self.m_time = time.time()
@@ -39,14 +40,14 @@ class IGNInterfacer:
 
 		rospy.loginfo("Motors Ready")
 
-	def velocity(self, msg):
+	def diff_drive_cb(self, msg):
 		self.m_time = time.time()
 		self.m_sleep = False
 
 		left_vel = msg.velocity[0]
 		right_vel = msg.velocity[1]
 
-		if left_vel == 0 and right_vel == 0:
+		if left_vel == 0.0 and right_vel == 0.0:
 			self.stop()
 			return
 
@@ -54,8 +55,8 @@ class IGNInterfacer:
 		left_spd = clamp(abs(left_vel), MIN_SPD, MAX_SPD)
 		right_spd = clamp(abs(right_vel), MIN_SPD, MAX_SPD)
 
-		self.m_left_vel = math.copysign(left_spd, left_vel) + random.random() * 0.02
-		self.m_right_vel = math.copysign(right_spd, right_vel) + random.random() * 0.02
+		self.m_left_vel = math.copysign(left_spd, left_vel) * 2.0
+		self.m_right_vel = math.copysign(right_spd, right_vel) * 2.0
 
 	def update(self):
 		if self.m_sleep:
@@ -70,8 +71,11 @@ class IGNInterfacer:
 
 
 	def stop(self):
+		self.m_left_vel = 0.0
+		self.m_right_vel = 0.0
 		self.right_pub.publish(0.0)
 		self.left_pub.publish(0.0)
+		self.m_sleep = True
 
 try:
 	ctrl = IGNInterfacer()
