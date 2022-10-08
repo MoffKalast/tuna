@@ -21,7 +21,7 @@ List of videos about construction and testing:
 
 ## Running in Gazebo Fortress
 
-![Diagram](tuna_description/img/gazebo.png)
+![Gazebo](tuna_description/img/gazebo.png)
 
 Base requirements:
 - [ROS Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
@@ -61,9 +61,11 @@ roslaunch tuna_viz rviz.launch
 
 ```
 
-## Running EZ-Map with Tuna
+## Running with EZ-Map
 
 (Should be open sourced soon, repos are still private)
+
+![Gazebo](tuna_description/img/ezmap.png)
 
 Install required plugin packages and their deps:
 
@@ -92,7 +94,7 @@ roslaunch tuna_ezmap ezmap.launch
 ```
 
 
-## Running on Raspberry Pi
+## Running on a Raspberry Pi
 
 Clone hw drivers:
 ```
