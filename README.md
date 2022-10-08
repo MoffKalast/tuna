@@ -30,7 +30,7 @@ Base requirements:
 
 Clone repos:
 
-```
+```bash
 cd ~/catkin_ws/src
 git clone https://github.com/MoffKalast/tuna.git
 git clone https://github.com/MoffKalast/diff_drive_simple.git
@@ -38,7 +38,7 @@ git clone https://github.com/MoffKalast/diff_drive_simple.git
 git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
 git clone https://github.com/nobleo/rviz_satellite.git
 
-// ign bridge setup, skip if already installed
+# ign bridge setup, skip if already installed
 export IGNITION_VERSION=fortress
 git clone https://github.com/osrf/ros_ign.git -b noetic
 
@@ -48,15 +48,15 @@ catkin_make
 ```
 
 Run:
-```
-// Run the sim
+```bash
+# Run the sim
 roscd tuna_gazebo
 ign gazebo water_world.sdf -r
 
-// Run bridge and Tuna nodes
+# Run bridge and Tuna nodes
 roslaunch tuna_gazebo ign.launch
 
-// Visualize
+# Visualize
 roslaunch tuna_viz rviz.launch
 
 ```
@@ -69,7 +69,7 @@ roslaunch tuna_viz rviz.launch
 
 Install required plugin packages and their deps:
 
-```
+```bash
 pip install pyyaml
 sudo apt-get install ros-noetic-rosbridge-suite ros-noetic-tf2-web-republisher python3-smbus ros-noetic-nmea-navsat-driver libudev-dev
 
@@ -87,17 +87,16 @@ catkin_make
 ```
 
 Run:
-```
+```bash
 roslaunch tuna_ezmap ezmap.launch
-
-// then view http://localhost:3000
 ```
+Then view http://localhost:3000
 
 
 ## Running on a Raspberry Pi
 
 Clone hw drivers:
-```
+```bash
 cd ~/catkin_ws/src
 git clone https://github.com/dpkoch/imu_calib.git
 git clone https://github.com/MoffKalast/safety_light.git
@@ -112,7 +111,7 @@ To run this on a Pi 4, start with a [20.04 Ubuntu Pi image](https://learn.ubiqui
 
 Fix services to set up correct ROS params and autorun at boot:
 
-```
+```bash
 cd ~/catkin_ws/src/tuna/tuna_bringup/config_scripts
 sudo cp roscore.service /etc/systemd/system/roscore.service
 
@@ -126,7 +125,7 @@ sudo cp ros_setup.sh /etc/ubiquity/ros_setup.sh
 
 Changes to `/boot/config.txt` for i2c, uart, and LED power saving:
 
-```
+```bash
 # disable rainbow splash screen for faster booting
 disable_splash=1
 
@@ -154,7 +153,7 @@ dtparam=eth_led1=4
 
 For the `safety_light` to have the correct kernel interface access create `/etc/udev/rules.d/99-gpio.rules` with the following contents (if it doesn't already exist):
 
-```
+```bash
 SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
 SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", RUN+="/bin/sh -c 'chown root:gpio /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'"
 SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", RUN+="/bin/chown root:gpio /sys%p/active_low /sys%p/edge /sys%p/direction /sys%p/value", RUN+="/bin/chmod 660 /sys%p/active_low /sys%p/edge /sys%p/direction /sys%p/value"
@@ -163,6 +162,6 @@ SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", RUN+="/bin/chown root:gpio /s
 
 This launch file will also launch automatically at boot via the magni-base service.
 
-```
+```bash
 roslaunch tuna_bringup core.launch
 ```
