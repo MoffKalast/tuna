@@ -15,20 +15,63 @@ List of videos about construction and testing:
 
 # Node Graph
 
-
 ![Diagram](tuna_description/img/NodeGraph.png)
 
 # Installation
 
-On a Pi or on a Noetic desktop for Gazebo usage.
+## Running in Gazebo Fortress
+
+![Diagram](tuna_description/img/gazebo.png)
+
+Base requirements:
+- [ROS Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
+- [Gazebo Ignition (version Fortress)](https://gazebosim.org/docs/fortress/install)
+- [ros_ign bridge for Noetic](https://github.com/gazebosim/ros_gz/tree/noetic#from-source)
+
+Clone repos:
+
+```
+cd ~/catkin_ws/src
+git clone https://github.com/MoffKalast/tuna.git
+git clone https://github.com/MoffKalast/diff_drive_simple.git
+
+git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
+git clone https://github.com/nobleo/rviz_satellite.git
+
+// ign bridge setup, skip if already installed
+export IGNITION_VERSION=fortress
+git clone https://github.com/osrf/ros_ign.git -b noetic
+
+cd ~/catkin_ws
+rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
+catkin_make
+```
+
+Run:
+```
+// Run the sim
+roscd tuna_gazebo
+ign gazebo water_world.sdf -r
+
+// Run bridge and Tuna nodes
+roslaunch tuna_gazebo ign.launch
+
+// Visualize
+roslaunch tuna_viz rviz.launch
+
+```
+
+## Running EZ-Map with Tuna
+
+(Should be open sourced soon, repos are still private)
+
+Install required plugin packages and their deps:
 
 ```
 pip install pyyaml
 sudo apt-get install ros-noetic-rosbridge-suite ros-noetic-tf2-web-republisher python3-smbus ros-noetic-nmea-navsat-driver libudev-dev
 
 cd ~/catkin_ws/src
-git clone https://github.com/MoffKalast/tuna.git
-git clone https://github.com/dpkoch/imu_calib.git
 git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
 
 git clone https://github.com/UbiquityRobotics/ezmap_core.git
@@ -37,21 +80,31 @@ git clone https://github.com/UbiquityRobotics/ezpkg_map_screen.git
 git clone https://github.com/UbiquityRobotics/ezpkg_rosbag_widget.git
 
 cd ~/catkin_ws
-rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
 catkin_make
 ```
 
-# Ignition Gazebo
+Run:
+```
+roslaunch tuna_ezmap ezmap.launch
 
-![Diagram](tuna_description/img/grid.png)
-
-https://gazebosim.org/docs/fortress/install
-
-https://github.com/gazebosim/ros_gz/tree/noetic#from-source
+// then view http://localhost:3000
+```
 
 
-# Raspberry Pi Specifics
+## Running on Raspberry Pi
+
+Clone hw drivers:
+```
+cd ~/catkin_ws/src
+git clone https://github.com/dpkoch/imu_calib.git
+git clone https://github.com/MoffKalast/safety_light.git
+git clone https://github.com/MoffKalast/mpu9255.git
+
+cd ~/catkin_ws
+rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
+catkin_make
+```
 
 To run this on a Pi 4, start with a [20.04 Ubuntu Pi image](https://learn.ubiquityrobotics.com/noetic_pi_image_downloads), install everything as listed above, plus [pigpio](https://abyz.me.uk/rpi/pigpio/download.html).
 
@@ -104,16 +157,7 @@ SUBSYSTEM=="bcm2835-gpiomem", KERNEL=="gpiomem", GROUP="gpio", MODE="0660"
 SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", RUN+="/bin/sh -c 'chown root:gpio /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'"
 SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", RUN+="/bin/chown root:gpio /sys%p/active_low /sys%p/edge /sys%p/direction /sys%p/value", RUN+="/bin/chmod 660 /sys%p/active_low /sys%p/edge /sys%p/direction /sys%p/value"
 ```
-
-# Run
-
-## In Gazebo
-
-```
-roslaunch tuna_gazebo sim.launch
-```
-
-## On a Pi
+### Run
 
 This launch file will also launch automatically at boot via the magni-base service.
 

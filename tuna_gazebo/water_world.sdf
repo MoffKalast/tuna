@@ -1,6 +1,5 @@
 <sdf version='1.9'>
 	<world name='waterworld'>
-
 		<physics name='1ms' type='ode'>
 			<max_step_size>0.001</max_step_size>
 			<real_time_factor>1</real_time_factor>
@@ -32,7 +31,6 @@
 		<plugin name='ignition::gazebo::systems::UserCommands' filename='ignition-gazebo-user-commands-system'/>
 		<plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system'/>
 		<plugin name="ignition::gazebo::systems::Imu" filename="libignition-gazebo-imu-system.so"></plugin>
-
 		<gui fullscreen='false'>
 			<plugin name='3D View' filename='MinimalScene'>
 				<ignition-gui>
@@ -45,7 +43,9 @@
 				<ambient_light>0.4 0.4 0.4</ambient_light>
 				<background_color>0.8 0.8 0.8</background_color>
 				<camera_pose>0 -6 8 0 0.8 1.56</camera_pose>
+
 			</plugin>
+			
 			<plugin name='Entity context menu' filename='EntityContextMenuPlugin'>
 				<ignition-gui>
 					<property key='state' type='string'>floating</property>
@@ -54,6 +54,7 @@
 					<property key='showTitleBar' type='bool'>false</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='Scene Manager' filename='GzSceneManager'>
 				<ignition-gui>
 					<property key='resizable' type='bool'>false</property>
@@ -63,6 +64,7 @@
 					<property key='showTitleBar' type='bool'>false</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='Interactive view control' filename='InteractiveViewControl'>
 				<ignition-gui>
 					<property key='resizable' type='bool'>false</property>
@@ -72,6 +74,7 @@
 					<property key='showTitleBar' type='bool'>false</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='Camera Tracking' filename='CameraTracking'>
 				<ignition-gui>
 					<property key='resizable' type='bool'>false</property>
@@ -81,6 +84,7 @@
 					<property key='showTitleBar' type='bool'>false</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='Select Entities' filename='SelectEntities'>
 				<ignition-gui>
 					<property key='resizable' type='bool'>false</property>
@@ -90,6 +94,7 @@
 					<property key='showTitleBar' type='bool'>false</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='Spawn Entities' filename='Spawn'>
 				<ignition-gui>
 					<property key='resizable' type='bool'>false</property>
@@ -99,6 +104,7 @@
 					<property key='showTitleBar' type='bool'>false</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='World control' filename='WorldControl'>
 				<ignition-gui>
 					<title>World control</title>
@@ -118,6 +124,7 @@
 				<start_paused>true</start_paused>
 				<use_event>true</use_event>
 			</plugin>
+			
 			<plugin name='World stats' filename='WorldStats'>
 				<ignition-gui>
 					<title>World stats</title>
@@ -137,6 +144,7 @@
 				<real_time_factor>true</real_time_factor>
 				<iterations>true</iterations>
 			</plugin>
+			
 			<plugin name='Transform control' filename='TransformControl'>
 				<ignition-gui>
 					<property key='resizable' type='bool'>false</property>
@@ -148,11 +156,13 @@
 				</ignition-gui>
 				<legacy>false</legacy>
 			</plugin>
+			
 			<plugin name='Entity tree' filename='EntityTree'>
 				<ignition-gui>
 					<property type='string' key='state'>docked</property>
 				</ignition-gui>
 			</plugin>
+			
 			<plugin name='NavSat Map' filename='NavSatMap'>
 				<ignition-gui>
 					<title>GNSS</title>
@@ -161,6 +171,20 @@
 				<topic>/gnss/fix</topic>
 				<topic_picker>true</topic_picker>
 			</plugin>
+
+			<plugin name='Grid config' filename='GridConfig'>
+				<ignition-gui>
+					<title>Grid Config</title>
+				</ignition-gui>
+				<insert>
+					<horizontal_cell_count>60</horizontal_cell_count>
+					<vertical_cell_count>0</vertical_cell_count>
+					<cell_length>5.0</cell_length>
+					<pose>-90 75 0  0 0 0</pose>
+					<color>1 1 1 0.7</color>
+				</insert>
+			</plugin>
+
 		</gui>
 
 		<gravity>0 0 -9.81</gravity>
@@ -271,8 +295,8 @@
 				<pose>0 0 0 0 0 0</pose>
 				<link name='base_link'>
 					<inertial>
-						<mass>1.5</mass>
-						<pose>-0.03 0 -0.02 0 0 0</pose>
+						<mass>1.4</mass>
+						<pose>-0.02 0 -0.02 0 0 0</pose>
 						<inertia>
 							<ixx>0.00002</ixx>
 							<ixy>0</ixy>
@@ -405,6 +429,7 @@
 						<update_rate>25</update_rate>
 						<visualize>true</visualize>
 						<topic>imu</topic>
+						<ignition_frame_id>imu</ignition_frame_id>
 					</sensor>
 
 					<sensor name='gnss_sensor' type='navsat'>
@@ -423,6 +448,7 @@
 								</vertical>
 							</position_sensing>
 						</gps>
+						<ignition_frame_id>gps</ignition_frame_id>
 					</sensor>
 
 				</link>
@@ -646,6 +672,5 @@
 				<falloff>0</falloff>
 			</spot>
 		</light>
-
 	</world>
 </sdf>

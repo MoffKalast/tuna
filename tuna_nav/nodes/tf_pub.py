@@ -124,8 +124,9 @@ class TFPublisher:
 
 	def fix_callback(self, msg):
 		if self.origin_fix is None and msg.status.status != -1:
-			 self.origin_fix = msg
-			 self.fix_origin_pub.publish(msg)
+			msg.header.frame_id = "map"
+			self.origin_fix = msg
+			self.fix_origin_pub.publish(msg)
 
 		self.fix_msg = msg
 

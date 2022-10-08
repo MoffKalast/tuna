@@ -121,8 +121,8 @@ class State:
 
 		# Joint States for RViz
 
-		self.prop_left += self.cmd_prop_left*0.03
-		self.prop_right += self.cmd_prop_left*0.03
+		self.prop_left += self.cmd_prop_left * 3.1
+		self.prop_right += self.cmd_prop_left * 3.1
 
 		state = JointState()
 		state.header.stamp = current_time

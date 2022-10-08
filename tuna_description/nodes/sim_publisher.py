@@ -23,6 +23,7 @@ def euler_to_quaternion(roll, pitch, yaw):
 
         return [qx, qy, qz, qw]
 
+#old simulator
 class State:
 	def __init__(self):
 		rospy.init_node('odometry_publisher')
