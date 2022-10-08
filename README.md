@@ -7,7 +7,7 @@
 List of videos about construction and testing:
 
 - ### [Tuna - ROS Autonomous Boat (Part 1)](https://www.youtube.com/watch?v=CoFgflu3uPA)
-- ### Tuna - ROS Autonomous Boat (Part 2)
+- ### [Tuna - ROS Autonomous Boat (Part 2)](https://www.youtube.com/watch?v=YwoHM_R7U2k)
 
 # Circuit Diagram
 
