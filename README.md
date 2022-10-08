@@ -25,7 +25,7 @@ List of videos about construction and testing:
 
 Base requirements:
 - [ROS Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
-- [Gazebo Ignition (version Fortress)](https://gazebosim.org/docs/fortress/install)
+- [Gazebo Ignition (version Fortress)](https://gazebosim.org/docs/fortress/install_ubuntu)
 - [ros_ign bridge for Noetic](https://github.com/gazebosim/ros_gz/tree/noetic#from-source)
 
 Clone repos:
