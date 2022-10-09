@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
-	<include file="$(find tuna_description)/launch/model.launch"/>
-	<include file="$(find tuna_description)/launch/odometry.launch"/>
+    <include file="$(find tuna_description)/launch/model.launch"/>
+    <include file="$(find tuna_description)/launch/odometry.launch"/>
 
     <include file="$(find tuna_nav)/launch/move_basic.launch"/>
     <include file="$(find tuna_nav)/launch/localization.launch"/>
 
-	<include file="$(find tuna_gazebo)/launch/bridge.launch"/>
+    <include file="$(find tuna_gazebo)/launch/bridge.launch"/>
 
 </launch>
