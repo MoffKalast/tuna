@@ -34,8 +34,9 @@ Clone repos:
 cd ~/catkin_ws/src
 git clone https://github.com/MoffKalast/tuna.git
 git clone https://github.com/MoffKalast/diff_drive_simple.git
+git clone https://github.com/MoffKalast/line_planner.git
 
-git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
+# Optional, for RViz Viewing
 git clone https://github.com/nobleo/rviz_satellite.git
 
 # ign bridge setup, skip if already installed
@@ -61,25 +62,16 @@ roslaunch tuna_viz rviz.launch
 
 ```
 
-## Running with EZ-Map
-
-(Should be open sourced soon, repos are still private)
-
-![Gazebo](tuna_description/img/ezmap.png)
+## Running with OutdooROS
 
 Install required plugin packages and their deps:
 
 ```bash
-pip install pyyaml
-sudo apt-get install ros-noetic-rosbridge-suite ros-noetic-tf2-web-republisher python3-smbus ros-noetic-nmea-navsat-driver libudev-dev
+pip install Flask
+sudo apt install ros-noetic-rosbridge-suite
 
 cd ~/catkin_ws/src
-git clone https://github.com/UbiquityRobotics/move_basic.git --branch 0.4.1
-
-git clone https://github.com/UbiquityRobotics/ezmap_core.git
-git clone https://github.com/UbiquityRobotics/ezpkg_battery_widget.git
-git clone https://github.com/UbiquityRobotics/ezpkg_map_screen.git
-git clone https://github.com/UbiquityRobotics/ezpkg_rosbag_widget.git
+https://github.com/MoffKalast/outdooros.git
 
 cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
@@ -88,7 +80,7 @@ catkin_make
 
 Run:
 ```bash
-roslaunch tuna_ezmap ezmap.launch
+roslaunch outdooros server.launch
 ```
 Then view http://localhost:3000
 

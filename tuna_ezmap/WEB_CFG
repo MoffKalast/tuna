@@ -1,7 +1,0 @@
-# The EZ-Map Web Autoloader will search for an asset in all locations with this config, as soon as an asset is found it will be returned, so search order is what defines what's loaded or not.
-#
-# Specify package type as OVERLAY or CORE to define type of package. CORE packages will be searched in last after all overlays have been searched in and act as a default base of assets.
-# The overlay packages can have a specified priority, e.g. OVERLAY -5, OVERLAY 10. Lower will be searched in first, higher will be loaded last. This way one overlay can modify another while both remain loaded. 
-# Unset priority will be treated as 0.
-
-OVERLAY -1

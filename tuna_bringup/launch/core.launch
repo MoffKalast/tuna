@@ -8,9 +8,9 @@
 	<include file="$(find tuna_bringup)/launch/imu.launch"/>
 	<include file="$(find tuna_bringup)/launch/gnss.launch"/>
 
-    <include file="$(find tuna_nav)/launch/move_basic.launch"/>
+    <include file="$(find tuna_nav)/launch/line_planner.launch"/>
     <include file="$(find tuna_nav)/launch/localization.launch"/>
 
-	<include file="$(find tuna_ezmap)/launch/ezmap.launch"/>
+	<include file="$(find outdooros)/launch/server.launch"/>
 
 </launch>

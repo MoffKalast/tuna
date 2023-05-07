@@ -1,0 +1,43 @@
+<launch>
+
+    <node name="line_planner" pkg="line_planner" type="line_planner_node.py" output="screen">
+
+        <param name="robot_frame" value="base_link"/>
+        <param name="planning_frame" value="map"/>
+
+        <param name="publish_debug_markers" value="true"/>
+
+        <param name="max_turning_velocity" value="0.9"/>
+
+        <param name="linear_acceleration" value="0.05"/>
+        <param name="min_linear_velocity" value="0.15"/>
+        <param name="max_linear_velocity" value="0.45"/>
+        
+        <!-- If base_link is this far away from the line, the projected distance will be min and scale to max when it's on the line.-->
+        <param name="max_line_divergence" value="2.0"/>
+
+        <param name="min_project_dist" value="0.25"/>
+        <param name="max_project_dist" value="2.0"/>
+
+        <!-- Distance at which the goal is considered reached.-->
+        <param name="goal_distance_threshold" value="2.0"/>
+
+        <param name="flip_angular_when_reversing" value="true"/>
+
+        <!-- PID params for heading control.-->
+        <param name="P" value="3.0"/>
+        <param name="I" value="0.001"/>
+        <param name="D" value="65.0"/>
+
+        <!-- If the robot frame is away from the line, the goal will be mirrored into the opposite direction and multiplied with this value.-->
+        <param name="side_offset_mult" value="0.5"/>
+
+        <!-- Update rate, should be about the same as localization rate.-->
+        <param name="rate" value="30"/>
+
+        <!-- If we make no or negative progress for this long, the goal is aborted. (seconds)-->
+        <param name="abort_timeout" value="240.0"/>
+
+    </node>
+    
+</launch>
