@@ -64,7 +64,7 @@ roslaunch tuna_viz rviz.launch
 
 ## Running with OutdooROS
 
-Install required plugin packages and their deps:
+Install:
 
 ```bash
 pip install Flask
@@ -82,7 +82,7 @@ Run:
 ```bash
 roslaunch outdooros server.launch
 ```
-Then view http://localhost:3000
+Then view http://localhost:5000
 
 
 ## Running on a Raspberry Pi
