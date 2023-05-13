@@ -91,6 +91,7 @@ Clone hw drivers:
 ```bash
 cd ~/catkin_ws/src
 git clone https://github.com/dpkoch/imu_calib.git
+git clone https://github.com/MoffKalast/onewiretemp.git
 git clone https://github.com/MoffKalast/safety_light.git
 git clone https://github.com/MoffKalast/mpu9255.git
 
