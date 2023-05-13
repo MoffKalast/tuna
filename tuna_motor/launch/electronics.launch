@@ -3,4 +3,9 @@
 	<node name="tuna_battery" pkg="tuna_motor" type="battery.py" output="screen" />
 	<node name="tuna_motor" pkg="tuna_motor" type="motor.py" output="screen"/>
 
+    <include file="$(find onewiretemp)/launch/autostart.launch">
+        <arg name="onewire_names" value="motor_left, motor_right"/>
+        <arg name="onewire_addresses" value="28-9809be0164ff, 28-a99dbd0164ff"/>
+    </include>
+
 </launch> 
