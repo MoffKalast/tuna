@@ -2,23 +2,21 @@
 
 import rospy
 import time
-from std_msgs.msg import Bool, String
+from std_msgs.msg import Bool
 
 class LightIndicator:
 	def __init__(self):
-		rospy.init_node('light_nav_indicator')
-
-		self.light_pub = rospy.Publisher("safety_light", Bool, queue_size=1)
-		self.route_sub = rospy.Subscriber("route_status", String, self.route_callback)
+		rospy.init_node('nav_indicator_light')
 
 		self.light_state = False
+		self.light_pub = rospy.Publisher("safety_light", Bool, queue_size=1)
 
-	def route_callback(self, msg):
-		state = msg.data != "stop"
+		self.route_sub = rospy.Subscriber("nav/active", Bool, self.nav_callback)
 		
-		if state != self.light_state:
-			self.light_state = state
-			self.light_pub.publish(self.light_state)
+	def nav_callback(self, msg):
+		if msg.data != self.light_state:
+			self.light_state = msg.data
+			self.light_pub.publish(msg.data)
 
 
 try:
