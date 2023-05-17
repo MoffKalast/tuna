@@ -22,8 +22,6 @@
         <!-- Distance at which the goal is considered reached.-->
         <param name="goal_distance_threshold" value="2.0"/>
 
-        <param name="flip_angular_when_reversing" value="true"/>
-
         <!-- PID params for heading control.-->
         <param name="P" value="3.0"/>
         <param name="I" value="0.001"/>
