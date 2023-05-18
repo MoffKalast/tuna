@@ -1,21 +1,9 @@
 <launch>
 
-    <node name="gps_gps_to_odom_node" pkg="gps_common" type="utm_odometry_node">
-        <remap from="odom" to="odom/gps"/>
-        <remap from="fix" to="gnss/fix" />
-        <param name="rot_covariance" value="99999" />
-        <param name="append_zone" value="true" />
-    </node>
-
-    <node name="gps_odom_to_gps_node" pkg="gps_common" type="utm_odometry_to_navsatfix_node">
-        <remap from="odom_fix" to="fix/origin"/>
-        <remap from="odom" to="odom/gps/origin" />
-    </node>
-
-    <node name="gps_tf_pub" pkg="tuna_nav" type="tf_pub.py" output="screen">
-        <remap from="gps_tf_reset" to="iris_lama_ros/reset_map"/>
+    <include file="$(find navsat_simple)/launch/localization.launch">
+        <arg name="low_pass_filter" value="0.998"/>
         <remap from="odom" to="/odometry/propeller" />
-    </node>
+    </include>
 
     <node name="light_nav_indicator" pkg="tuna_nav" type="light_indicator.py" output="screen"/>
     
