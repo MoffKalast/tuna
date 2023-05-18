@@ -37,5 +37,7 @@
         <param name="abort_timeout" value="240.0"/>
 
     </node>
+
+    <node name="area_router" pkg="line_planner" type="area_router.py" output="screen"/>
     
 </launch>
