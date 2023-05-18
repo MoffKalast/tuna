@@ -112,7 +112,7 @@ class State:
 		odom = Odometry()
 		odom.header.stamp = current_time
 		odom.header.frame_id = "odom"
-		odom.pose.pose = Pose(Point(self.x, self.y, 0), Quaternion(0,0,0,1))
+		odom.pose.pose = Pose(Point(self.x, self.y, 0), Quaternion(self.rotation[0], self.rotation[1], self.rotation[2], self.rotation[3]))
 		odom.pose.covariance = self.get_covariance(1.0)
 		odom.child_frame_id = "base_link"
 		odom.twist.twist = Twist(Vector3(deltax, deltay, 0), Vector3(0, 0, 0))

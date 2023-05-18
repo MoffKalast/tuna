@@ -5,7 +5,7 @@
 	<node name="navsat_simple_node" pkg="navsat_simple" type="localization.py" output="screen">
 		<param name="gps_low_pass_filter" value="0.998" />
 		<param name="odom_high_pass_filter" value="0.9985" />
-		<remap from="odom" to="/odometry/propeller" />
+		<remap from="odom/wheels" to="/odometry/propeller" />
 	</node>
 
 	<node name="light_nav_indicator" pkg="tuna_nav" type="light_indicator.py" output="screen"/>
