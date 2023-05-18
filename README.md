@@ -33,7 +33,11 @@ Clone repos:
 ```bash
 cd ~/catkin_ws/src
 git clone https://github.com/MoffKalast/tuna.git
+# Diff drive controller
 git clone https://github.com/MoffKalast/diff_drive_simple.git
+# Localization fusion
+git clone https://github.com/MoffKalast/navsat_simple.git
+# Goal planner
 git clone https://github.com/MoffKalast/line_planner.git
 
 # Optional, for RViz Viewing
