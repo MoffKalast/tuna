@@ -54,11 +54,14 @@ Run:
 roscd tuna_gazebo
 ign gazebo water_world.sdf -r
 
-# Run bridge and Tuna nodes
+# Run bridge and navigation nodes
 roslaunch tuna_gazebo ign.launch
 
 # Visualize
 roslaunch tuna_viz rviz.launch
+
+# Turn on currnent/wind simulation
+rosrun tuna_gazebo wave_generator.py
 
 ```
 

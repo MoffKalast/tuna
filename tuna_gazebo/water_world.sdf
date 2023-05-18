@@ -38,12 +38,12 @@
 					<property type='bool' key='showTitleBar'>false</property>
 					<property type='string' key='state'>docked</property>
 				</ignition-gui>
+				<grid>false</grid>
 				<engine>ogre2</engine>
 				<scene>scene</scene>
 				<ambient_light>0.4 0.4 0.4</ambient_light>
 				<background_color>0.8 0.8 0.8</background_color>
 				<camera_pose>0 -6 8 0 0.8 1.56</camera_pose>
-
 			</plugin>
 			
 			<plugin name='Entity context menu' filename='EntityContextMenuPlugin'>
@@ -175,6 +175,7 @@
 			<plugin name='Grid config' filename='GridConfig'>
 				<ignition-gui>
 					<title>Grid Config</title>
+					<grid>false</grid>
 				</ignition-gui>
 				<insert>
 					<horizontal_cell_count>60</horizontal_cell_count>
@@ -183,6 +184,7 @@
 					<pose>-90 75 0  0 0 0</pose>
 					<color>1 1 1 0.7</color>
 				</insert>
+				<grid>false</grid>
 			</plugin>
 
 		</gui>

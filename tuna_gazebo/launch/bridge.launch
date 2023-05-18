@@ -22,7 +22,4 @@
 
 	<node name="ign_interfacer" pkg="tuna_gazebo" type="ign_interfacer.py"/>
 
-	<node name="wave_generator" pkg="tuna_gazebo" type="wave_generator.py"/>
-
-
 </launch>
