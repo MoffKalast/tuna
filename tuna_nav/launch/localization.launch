@@ -3,8 +3,8 @@
 	<include file="$(find navsat_simple)/launch/gps_common.launch"/>
 
 	<node name="navsat_simple_node" pkg="navsat_simple" type="localization.py" output="screen">
-		<param name="gps_low_pass_filter" value="0.998" />
-		<param name="odom_high_pass_filter" value="0.9985" />
+		<param name="gps_low_pass_filter" value="0.99" />
+		<param name="odom_high_pass_filter" value="0.996" />
 		<remap from="odom/wheels" to="/odometry/propeller" />
 	</node>
 

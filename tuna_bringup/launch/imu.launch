@@ -16,7 +16,7 @@
 		<param name="gyr_bias_y" value="0"/>
 		<param name="gyr_bias_z" value="0"/>
 
-		<remap from="/imu/data_raw" to="/imu/data_uncalibrated"/>
+		<remap from="/imu/data_raw" to="/imu/uncalibrated"/>
 	</node>
 
 	<node pkg="imu_calib" name="imu_calibration_node" type="apply_calib">
@@ -24,8 +24,8 @@
 		<param name="calibrate_gyros" value="true"/>
 		<param name="gyro_calib_samples" value="100"/>
 
-		<remap from="raw" to="/imu/data_uncalibrated"/>
-		<remap from="corrected" to="/imu/data_raw"/>
+		<remap from="raw" to="/imu/uncalibrated"/>
+		<remap from="corrected" to="/imu/raw"/>
 	</node>
 
 	<node pkg="tuna_nav" name="imu_filter" type="imu_filter.py"/>

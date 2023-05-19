@@ -16,7 +16,7 @@ import tf2_ros
 import tf2_geometry_msgs
 
 RATE = 20.0
-CALIB_FACTOR = 0.85
+CALIB_FACTOR = 1.0
 
 def transform_quat(orientation, tf_buffer, from_frame, to_frame):
 	pose_stamped = tf2_geometry_msgs.PoseStamped()
@@ -88,7 +88,7 @@ class State:
 	def publish_state(self):
 
 		#slow acceleration and drifting
-		self.speed = self.speed * 0.97 + self.cmd_linear_speed * 0.03
+		self.speed = self.speed * 0.95 + self.cmd_linear_speed * 0.05
 
 		current_time = rospy.Time.now()
 		linearmove = self.speed * 1.0/RATE

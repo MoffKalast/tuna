@@ -14,13 +14,13 @@
         <param name="max_linear_velocity" value="0.45"/>
         
         <!-- If base_link is this far away from the line, the projected distance will be min and scale to max when it's on the line.-->
-        <param name="max_line_divergence" value="2.0"/>
+        <param name="max_line_divergence" value="1.5"/>
 
         <param name="min_project_dist" value="0.25"/>
-        <param name="max_project_dist" value="2.0"/>
+        <param name="max_project_dist" value="2.5"/>
 
         <!-- Distance at which the goal is considered reached.-->
-        <param name="goal_distance_threshold" value="2.0"/>
+        <param name="goal_distance_threshold" value="1.5"/>
 
         <!-- PID params for heading control.-->
         <param name="P" value="3.0"/>
