@@ -20,7 +20,7 @@
 	</node>
 
 	<node pkg="imu_calib" name="imu_calibration_node" type="apply_calib">
-		<param name="calib_file" value="$(find tuna_bringup)/param/imu_calib.yaml"/>
+		<param name="calib_file" value="$(find tuna_bringup)/param/new_calib.yaml"/>
 		<param name="calibrate_gyros" value="true"/>
 		<param name="gyro_calib_samples" value="100"/>
 
