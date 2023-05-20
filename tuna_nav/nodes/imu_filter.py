@@ -17,55 +17,42 @@ class IMUFilter:
 		rospy.init_node('imu_filter', anonymous=True)
 
 		self.mag_angle = 0
+		self.mag_angle_x = 0
+		self.mag_angle_y = 0
+		self.mag_angle_z = 0
+
 		self.rotation = (0.0, 0.0, 0.0, 1.0)
-		self.last_time = rospy.Time.now().to_sec()
 
 		self.imu_pub = rospy.Publisher("/imu/data", Imu, queue_size=50)
 
 		self.imu_sub = rospy.Subscriber("/imu/raw", Imu, self.imu_data)
 		self.mag_sub = rospy.Subscriber("/imu/mag", MagneticField, self.mag_data)
 
+		self.gyro_callib_y = None
+
 	def mag_data(self, msg):
 		m = msg.magnetic_field
-
 		self.mag_angle = math.atan2(m.x, m.z)
 
-		#Theoretical compensation for tilt, if accel data wasn't complete trash 
-
-		#roll = atan2(accel_y, accel_z)
-		#pitch = atan2(-accel_x, sqrt(accel_y * accel_y + accel_z * accel_z))
-
-		#mag_x_comp = mag_x * cos(pitch) + mag_y * sin(roll) * sin(pitch) + mag_z * cos(roll) * sin(pitch)
-		#mag_y_comp = mag_y * cos(roll) - mag_z * sin(roll)
-
-		#self.mag_angle = atan2(-mag_y_comp, mag_x_comp)
-
 	def imu_data(self, msg):
+		self.imu_msg = msg
 
-		current_time = msg.header.stamp.to_sec()
-		dt = current_time - self.last_time
-		self.last_time = current_time
+		if self.gyro_callib_y is None:
+			self.gyro_callib_y = -msg.angular_velocity.y
 
-		deltarot = tf.transformations.quaternion_from_euler(msg.angular_velocity.x * dt, -msg.angular_velocity.z * dt, -msg.angular_velocity.y * dt)	
+		y = -msg.angular_velocity.y - self.gyro_callib_y
+		deltarot = tf.transformations.quaternion_from_euler(0, 0, y * 0.0255)	
 		self.rotation = tf.transformations.quaternion_multiply(self.rotation, deltarot)
 
-		#deltarot = tf.transformations.quaternion_from_euler(msg.angular_velocity.x * 0.0255, -msg.angular_velocity.z * 0.0255, -msg.angular_velocity.y * 0.0255)	
-		#self.rotation = tf.transformations.quaternion_multiply(self.rotation, deltarot)
-
+		magquat = tf.transformations.quaternion_from_euler(self.mag_angle_x, self.mag_angle_y, self.mag_angle_z)
 		magquat = tf.transformations.quaternion_from_euler(0, 0, self.mag_angle)
-		self.rotation = tf.transformations.quaternion_slerp(self.rotation, magquat, 0.02)
+		self.rotation = tf.transformations.quaternion_slerp(self.rotation, magquat, 0.005)
 
 		msg.orientation.x = self.rotation[0]
 		msg.orientation.y = self.rotation[1]
 		msg.orientation.z = self.rotation[2]
 		msg.orientation.w = self.rotation[3]
 		self.imu_pub.publish(msg)
-
-		test = PoseWithCovarianceStamped()
-		test.header.frame_id = "map"
-		test.pose.pose.position.x = 1.0
-		test.pose.pose.orientation = msg.orientation
-		self.pose_pub.publish(test)
 
 try:
 	b = IMUFilter()
