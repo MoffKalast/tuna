@@ -8,6 +8,11 @@
 		<remap from="odom/wheels" to="/odometry/propeller" />
 	</node>
 
+	<node name="navsat_simple_heading_node" pkg="navsat_simple" type="heading.py" output="screen">
+		<param name="min_velocity" value="0.5" />
+		<param name="min_covariance" value="10.0" />
+	</node>
+
 	<node name="light_nav_indicator" pkg="tuna_nav" type="light_indicator.py" output="screen"/>
 	
 </launch>
