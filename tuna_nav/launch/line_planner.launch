@@ -1,6 +1,6 @@
 <launch>
 
-    <node name="line_planner" pkg="line_planner" type="line_planner_node.py" output="screen">
+    <node name="line_planner" pkg="line_planner" type="line_planner_node.py">
 
         <param name="robot_frame" value="base_link"/>
         <param name="planning_frame" value="map"/>
@@ -38,6 +38,6 @@
 
     </node>
 
-    <node name="area_router" pkg="line_planner" type="area_router.py" output="screen"/>
+    <node name="area_to_path_node" pkg="line_planner" type="area_to_path.py"/>
     
 </launch>
