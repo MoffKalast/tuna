@@ -11,6 +11,6 @@
     <include file="$(find tuna_nav)/launch/line_planner.launch"/>
     <include file="$(find tuna_nav)/launch/localization.launch"/>
 
-	<include file="$(find outdooros)/launch/server.launch"/>
+	<include file="$(find vizanti)/launch/server.launch"/>
 
 </launch>
