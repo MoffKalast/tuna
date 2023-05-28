@@ -69,7 +69,11 @@ rosrun tuna_gazebo wave_generator.py
 
 ```
 
-## Running with OutdooROS
+<br>
+
+## Running with Vizanti
+
+![Vizanti](tuna_description/img/vizanti.jpg)
 
 Install:
 
@@ -78,7 +82,7 @@ pip install Flask
 sudo apt install ros-noetic-rosbridge-suite
 
 cd ~/catkin_ws/src
-https://github.com/MoffKalast/outdooros.git
+https://github.com/MoffKalast/vizanti.git
 
 cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
@@ -87,10 +91,11 @@ catkin_make
 
 Run:
 ```bash
-roslaunch outdooros server.launch
+roslaunch vizanti server.launch
 ```
 Then view http://localhost:5000
 
+<br>
 
 ## Running on a Raspberry Pi
 
