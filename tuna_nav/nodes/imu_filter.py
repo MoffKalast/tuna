@@ -2,15 +2,11 @@
 
 import numpy as np
 import rospy
-import time
 import math
 import tf
 
-from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3, TransformStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped
 from sensor_msgs.msg import Imu, MagneticField
-
-import tf2_ros
-import tf2_geometry_msgs
 
 class IMUFilter:
 	def __init__(self):
@@ -57,10 +53,10 @@ class IMUFilter:
 
 		magquat = tf.transformations.quaternion_from_euler(self.mag_angle_x, self.mag_angle_y, self.mag_angle_z)
 		magquat = tf.transformations.quaternion_from_euler(0, 0, self.mag_angle)
-		self.rotation = tf.transformations.quaternion_slerp(self.rotation, magquat, 0.005)
+		self.rotation = tf.transformations.quaternion_slerp(self.rotation, magquat, 0.004)
 
 		if not self.gps_rotation is None:
-			self.rotation = tf.transformations.quaternion_slerp(self.rotation, self.gps_rotation, 0.04)
+			self.rotation = tf.transformations.quaternion_slerp(self.rotation, self.gps_rotation, 0.035)
 
 		msg.orientation.x = self.rotation[0]
 		msg.orientation.y = self.rotation[1]

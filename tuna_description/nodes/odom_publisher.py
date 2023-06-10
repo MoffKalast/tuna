@@ -71,9 +71,12 @@ class State:
 		self.imu_angle = angles[2]
 
 	def diff_drive_data(self, msg):
-		self.cmd_linear_speed = (msg.velocity[0] + msg.velocity[1]) * 0.5 * CALIB_FACTOR
-		self.cmd_prop_left = msg.velocity[0]
-		self.cmd_prop_right = msg.velocity[1]
+		if math.isnan(msg.velocity[0]) or math.isnan(msg.velocity[1]):
+			rospy.logfatal("Warning: NaN value detected in diff_drive_data: v0=%s, v1=%s", msg.velocity[0], msg.velocity[1])
+		else:
+			self.cmd_linear_speed = (msg.velocity[0] + msg.velocity[1]) * 0.5 * CALIB_FACTOR
+			self.cmd_prop_left = msg.velocity[0]
+			self.cmd_prop_right = msg.velocity[1]
 
 	def get_covariance(self, val):
 		array = np.zeros(36)
@@ -90,6 +93,10 @@ class State:
 		#slow acceleration and drifting
 		self.speed = self.speed * 0.95 + self.cmd_linear_speed * 0.05
 
+		if math.isnan(self.speed):
+			rospy.logfatal("Warning: odometry speed is NaN")
+			self.speed = 0.0
+
 		current_time = rospy.Time.now()
 		linearmove = self.speed * 1.0/RATE
 
@@ -100,6 +107,11 @@ class State:
 
 		cosang = math.cos(self.angle)
 		sinang = math.sin(self.angle)
+
+		if math.isnan(cosang) or math.isnan(sinang):
+			rospy.logfatal("Warning: odometry angle is NaN")
+			sinang = 0
+			cosang = 0
 
 		deltax = turnx * cosang - turny * sinang
 		deltay = turnx * sinang + turny * cosang
@@ -115,7 +127,7 @@ class State:
 		odom.pose.pose = Pose(Point(self.x, self.y, 0), Quaternion(self.rotation[0], self.rotation[1], self.rotation[2], self.rotation[3]))
 		odom.pose.covariance = self.get_covariance(1.0)
 		odom.child_frame_id = "base_link"
-		odom.twist.twist = Twist(Vector3(deltax, deltay, 0), Vector3(0, 0, 0))
+		odom.twist.twist = Twist(Vector3(self.speed, 0, 0), Vector3(0, 0, 0))
 		odom.twist.covariance = self.get_covariance(1.0)
 		self.odom_pub.publish(odom)
 
