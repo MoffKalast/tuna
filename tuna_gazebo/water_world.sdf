@@ -440,14 +440,18 @@
 						<topic>gnss/fix</topic>
 						<gps>
 							<position_sensing>
-								<horizontal>
-									<noise type="gaussian">
-									</noise>
-								</horizontal>
-								<vertical>
-									<noise type="gaussian">
-									</noise>
-								</vertical>
+							<horizontal>
+								<noise type="gaussian">
+									<mean>0.00001</mean>   <!-- Adjust the mean value as desired -->
+									<stddev>0.0000002</stddev>   <!-- Square root of the latitude/longitude variance -->
+								</noise>
+							</horizontal>
+							<vertical>
+								<noise type="gaussian">
+								<mean>0</mean>   <!-- Adjust the mean value as desired -->
+								<stddev>0.000001</stddev>   <!-- Square root of the altitude variance -->
+								</noise>
+							</vertical>
 							</position_sensing>
 						</gps>
 						<ignition_frame_id>gps</ignition_frame_id>
