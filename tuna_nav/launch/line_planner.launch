@@ -38,6 +38,8 @@
 
     </node>
 
-    <node name="area_to_path_node" pkg="line_planner" type="area_to_path.py"/>
+    <node name="area_to_path_node" pkg="line_planner" type="area_to_path.py">
+        <param name="step_size" value="4.0"/>
+    </node>
     
 </launch>
