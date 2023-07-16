@@ -4,10 +4,19 @@
 
 # About
 
+Tuna is an open-electronics and open-software GNSS platform for ROS, based on the Pi 4. It uses diff drive control for locomotion with [diff_drive_simple](https://github.com/MoffKalast/diff_drive_simple), a standard percision GNSS receiver for absolute localization with [navsat_simple](https://github.com/MoffKalast/navsat_simple), and an IMU for rotational data. If you see the overreaching theme there, I'm trying to keep everything as simple as possible.
+
+In the current iteration it uses [Vizanti](https://github.com/MoffKalast/vizanti) as the mission planner and [line_planner](https://github.com/MoffKalast/line_planner) as its local planner. You can find more specific info below or in the related videos.
+
 List of videos about construction and testing:
 
-- ### [Tuna - ROS Autonomous Boat (Part 1)](https://www.youtube.com/watch?v=CoFgflu3uPA)
-- ### [Tuna - ROS Autonomous Boat (Part 2)](https://www.youtube.com/watch?v=l3ynv3hPWGs)
+| Video      | Description |
+| ----------- | ----------- |
+| [![Watch the video](https://img.youtube.com/vi/CoFgflu3uPA/default.jpg)](https://www.youtube.com/watch?v=CoFgflu3uPA) | Hardware setup and general software stack info, initial testing with ROS Mobile and navsat_transform_node.       |
+| [![Watch the video](https://img.youtube.com/vi/l3ynv3hPWGs/default.jpg)](https://www.youtube.com/watch?v=l3ynv3hPWGs) | Practical navigation experiments with proprietary EZ-Map and gps_common. Simulation in Ignition Gazebo.       |
+| [![Watch the video](https://img.youtube.com/vi/NZO6q_YMRwI/default.jpg)](https://www.youtube.com/watch?v=NZO6q_YMRwI) | Open source navigation and interface with Vizanti, developing the more accurate line_planner. Survey pattern tests. |
+
+
 
 # Circuit Diagram
 
