@@ -87,13 +87,9 @@ rosrun tuna_gazebo wave_generator.py
 Install:
 
 ```bash
-pip install Flask
-sudo apt install ros-noetic-rosbridge-suite
-
 cd ~/catkin_ws/src
 https://github.com/MoffKalast/vizanti.git
-
-cd ~/catkin_ws
+cd ..
 rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
 catkin_make
 ```
