@@ -16,7 +16,7 @@ import tf2_ros
 import tf2_geometry_msgs
 
 RATE = 20.0
-CALIB_FACTOR = 1.0
+CALIB_FACTOR = 1.55
 
 def transform_quat(orientation, tf_buffer, from_frame, to_frame):
 	pose_stamped = tf2_geometry_msgs.PoseStamped()
